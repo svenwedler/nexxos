@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>PowerNexx Vertriebsbüro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: fixed dark control rail (like a switchboard) + light working surface; collapses to a top bar on phones */
+:root{
+  --bg:#f3f6f5; --surface:#ffffff; --surface-2:#eaf0ee; --fg:#14211e; --muted:#5b6c67; --line:#d5e0dc;
+  --accent:#0f8a6c; --accent-ink:#ffffff; --accent-soft:#dff3ec;
+  --volt:#e9b10f; --volt-soft:#fbf1cf;
+  --good:#1f8a4c; --warn:#b7791f; --bad:#c2413a; --info:#2563a8;
+  --rail:#0d1a17; --rail-2:#152823; --rail-fg:#d7e6e1; --rail-muted:#7e9790;
+  --f-display:"Sora", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1715; --surface:#16211e; --surface-2:#1c2a26; --fg:#e4efeb; --muted:#93a8a1; --line:#2a3a35;
+  --accent:#2fc196; --accent-ink:#06231b; --accent-soft:#163b31; --volt:#f2c440; --volt-soft:#3a3115;
+  --good:#4cc283; --warn:#e3a649; --bad:#ef746c; --info:#6fa7e8;
+  --rail:#08100e; --rail-2:#111d1a; --rail-fg:#d7e6e1; --rail-muted:#7e9790; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1715; --surface:#16211e; --surface-2:#1c2a26; --fg:#e4efeb; --muted:#93a8a1; --line:#2a3a35;
+  --accent:#2fc196; --accent-ink:#06231b; --accent-soft:#163b31; --volt:#f2c440; --volt-soft:#3a3115;
+  --good:#4cc283; --warn:#e3a649; --bad:#ef746c; --info:#6fa7e8;
+  --rail:#08100e; --rail-2:#111d1a; --rail-fg:#d7e6e1; --rail-muted:#7e9790; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:1.65rem} h2{font-size:1.2rem} h3{font-size:1rem}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100%}
+/* rail */
+.rail{background:var(--rail);color:var(--rail-fg);display:flex;flex-direction:column;gap:18px;padding-block:20px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:14px;position:sticky;top:0;height:100vh;height:100dvh}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px}
+.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex:none;overflow:hidden}
+.brand-mark img{width:100%;height:100%;object-fit:cover}
+.brand-name{font-family:var(--f-display);font-weight:700;font-size:1.05rem;line-height:1.1}
+.brand-sub{font-size:.72rem;color:var(--rail-muted);letter-spacing:.06em;text-transform:uppercase}
+.nav{display:flex;flex-direction:column;gap:2px;overflow:auto}
+.nav-group{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rail-muted);padding:12px 10px 4px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--rail-fg);text-decoration:none;font-size:.92rem;white-space:nowrap}
+.nav a:hover{background:var(--rail-2)}
+.nav a[aria-current="page"]{background:var(--rail-2);box-shadow:inset 3px 0 0 var(--accent)}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.rail-foot{margin-top:auto;font-size:.75rem;color:var(--rail-muted);padding:0 8px;display:flex;flex-direction:column;gap:6px}
+.demo-flag{display:inline-flex;align-items:center;gap:6px;background:var(--rail-2);border-radius:999px;padding:3px 10px;color:var(--volt);font-size:.72rem;width:max-content}
+/* main */
+.main{min-width:0;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.head p{color:var(--muted);margin-top:4px;max-width:62ch}
+.eyebrow{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g-dash{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}
+.kpi{display:flex;flex-direction:column;gap:4px}
+.kpi .label{font-size:.78rem;color:var(--muted)}
+.kpi .value{font-family:var(--f-mono);font-size:1.6rem;font-weight:500;font-variant-numeric:tabular-nums}
+.kpi .delta{font-size:.78rem;color:var(--good)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:500;font-size:.9rem;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.small{padding:5px 10px;font-size:.82rem}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:.78rem;color:var(--muted);font-weight:500}
+.input,select.input,textarea.input{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 11px;width:100%;min-width:0}
+textarea.input{resize:vertical;min-height:80px}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:9px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;padding:6px 14px;border-radius:7px;cursor:pointer;font-weight:500;font-size:.88rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.partner{background:var(--accent-soft);color:var(--accent)}
+.pill.market{background:var(--surface-2);color:var(--muted)}
+.pill.oeko{background:var(--accent-soft);color:var(--good)}
+.pill.volt{background:var(--volt-soft);color:var(--warn)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.pill.info{background:color-mix(in srgb,var(--info) 14%,transparent);color:var(--info)}
+.muted{color:var(--muted)}
+.small{font-size:.82rem}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.list{display:flex;flex-direction:column}
+.list>li,.list>.item{list-style:none;padding:11px 0;border-top:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.list>li:first-child,.list>.item:first-child{border-top:0}
+ul.list{margin:0;padding:0}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none;background:var(--accent)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{text-align:left;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.r,th.r{text-align:right}
+/* tariff results */
+.tariffs{display:flex;flex-direction:column;gap:10px}
+.tariff{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,.8fr)) minmax(0,1.1fr);gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.tariff.cheapest{border-color:var(--fg)}
+.tariff.best-partner{border:2px solid var(--accent);background:linear-gradient(0deg,var(--accent-soft),var(--accent-soft)) padding-box}
+.tariff .t-name{font-weight:600}
+.tariff .t-meta{font-size:.78rem;color:var(--muted)}
+.tariff .t-cell .k{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tariff .t-cost{text-align:right}
+.tariff .t-cost .big{font-family:var(--f-mono);font-size:1.25rem;font-weight:500}
+.voucher{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border:1px dashed var(--accent);background:var(--surface);border-radius:8px;padding:10px 12px;grid-column:1/-1}
+.voucher code{font-family:var(--f-mono);font-weight:500;font-size:1rem;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:6px}
+.notice{font-size:.8rem;color:var(--muted);border-left:3px solid var(--volt);padding:8px 12px;background:var(--surface-2);border-radius:0 8px 8px 0}
+/* kanban */
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(200px,1fr));gap:12px;overflow-x:auto;padding-bottom:6px}
+.col{background:var(--surface-2);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:180px}
+.col.drop{outline:2px dashed var(--accent)}
+.col-head{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;padding:2px 4px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;cursor:pointer;display:flex;flex-direction:column;gap:6px;text-align:left}
+.card:hover{border-color:var(--accent)}
+.card .c-name{font-weight:600;font-size:.9rem}
+.card .c-sub{font-size:.78rem;color:var(--muted)}
+/* chat */
+.chat{display:flex;flex-direction:column;height:min(640px,70vh);min-height:420px}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 12px}
+.msg{max-width:78%;padding:10px 14px;border-radius:12px;white-space:pre-wrap;line-height:1.55;font-size:.92rem}
+.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:4px}
+.composer{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.82rem;cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+/* toggle */
+.toggle{position:relative;width:40px;height:22px;flex:none}
+.toggle input{opacity:0;width:100%;height:100%;margin:0;position:absolute;cursor:pointer;z-index:1}
+.toggle span{position:absolute;inset:0;background:var(--line);border-radius:999px;transition:background .15s}
+.toggle span::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .15s}
+.toggle input:checked+span{background:var(--accent)}
+.toggle input:checked+span::after{transform:translateX(18px)}
+.toggle input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.82rem}
+.flow .step{background:var(--surface-2);border-radius:6px;padding:3px 8px}
+.flow .arrow{color:var(--muted)}
+/* partner tree */
+.tree,.tree ul{list-style:none;margin:0;padding:0}
+.tree ul{padding-left:22px;border-left:1px solid var(--line);margin-left:9px}
+.tree li{padding:5px 0}
+.node{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:.86rem}
+.lvl{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.progress{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.progress>i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.ranks{display:flex;gap:6px;flex-wrap:wrap}
+.rank{flex:1;min-width:110px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.8rem}
+.rank.on{border-color:var(--accent);background:var(--accent-soft)}
+.rank b{display:block;font-family:var(--f-display);font-size:.9rem}
+/* pricing */
+.plan{display:flex;flex-direction:column;gap:12px}
+.plan.featured{border:2px solid var(--accent)}
+.plan .price{font-family:var(--f-mono);font-size:1.7rem;font-weight:500}
+.plan ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:.88rem}
+/* white label preview */
+.wl-preview{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-columns:120px 1fr;min-height:220px}
+.wl-preview .side{padding:12px;display:flex;flex-direction:column;gap:8px;font-size:.78rem}
+.wl-preview .body{padding:14px;background:var(--surface);display:flex;flex-direction:column;gap:10px}
+.wl-preview .bar{height:8px;border-radius:4px;background:var(--surface-2)}
+/* landing */
+.landing{display:flex;flex-direction:column;gap:40px}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:center;padding-block:12px}
+.hero h1{font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.12}
+.hero p{font-size:1.05rem;color:var(--muted);max-width:52ch}
+.meter{background:var(--rail);color:var(--rail-fg);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px;font-family:var(--f-mono);font-size:.85rem}
+.meter .lcd{background:#0a1411;border:1px solid #233a33;border-radius:8px;padding:14px;color:#9ff0cf;font-size:1.6rem;letter-spacing:.06em;text-align:right}
+.meter .meter-row{display:flex;justify-content:space-between;color:var(--rail-muted)}
+.meter .meter-row b{color:var(--rail-fg);font-weight:500}
+.features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.features .panel h3{margin-bottom:6px}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(5,12,10,.55);display:grid;place-items:center;padding:16px;z-index:50}
+.modal{background:var(--surface);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line)}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));right:calc(20px + env(safe-area-inset-right,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.88rem;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.empty{padding:24px;text-align:center;color:var(--muted);font-size:.9rem}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+body.customer .rail{display:none}
+body.customer .app{grid-template-columns:minmax(0,1fr)}
+.offer-line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.offer-line:first-child{border-top:0}
+.offer-line.total{font-weight:600;font-size:1.05rem}
+@media (max-width: 1020px){
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g-dash,.split,.hero{grid-template-columns:minmax(0,1fr)}
+  .features,.g3{grid-template-columns:minmax(0,1fr)}
+  .tariff{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .tariff .t-main{grid-column:1/-1}
+  .tariff .t-cost{text-align:left}
+}
+@media (max-width: 760px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:sticky;top:0;height:auto;flex-direction:row;align-items:center;padding-block:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));padding-right:max(14px,env(safe-area-inset-right,0px));gap:12px;z-index:20}
+  .brand-sub,.rail-foot,.nav-group{display:none}
+  .nav{flex-direction:row;overflow-x:auto;min-width:0;flex:1}
+  .nav a{padding:7px 10px}
+  .nav a[aria-current="page"]{box-shadow:inset 0 -3px 0 var(--accent)}
+  .g2,.g4{grid-template-columns:minmax(0,1fr)}
+  .msg{max-width:92%}
+  .wl-preview{grid-template-columns:90px 1fr}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <aside class="rail" aria-label="Hauptnavigation">
+    <div class="brand">
+      <div class="brand-mark" id="brandMark"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
+      <div><div class="brand-name" id="brandName">PowerNexx</div><div class="brand-sub">Vertriebsbüro</div></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="rail-foot">
+      <span class="demo-flag">● Demo-Daten</span>
+      <span>Tarife, Leads und Provisionen sind Beispiele. Echte APIs werden später angebunden.</span>
+    </div>
+  </aside>
+  <main class="main"><div class="wrap" id="view"></div></main>
+</div>
+<div id="modalRoot"></div>
+
+<script>
+(() => {
+"use strict";
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const eur = (n, d = 2) => new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+const num = (n, d = 0) => new Intl.NumberFormat("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+const today = new Date(); today.setHours(0,0,0,0);
+const addDays = n => { const d = new Date(today); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const fmtDate = iso => iso ? new Date(iso+"T00:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"}) : "–";
+const uid = () => Math.random().toString(36).slice(2,8);
+function toast(t){ const d=document.createElement("div"); d.className="toast"; d.setAttribute("role","status"); d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2600); }
+async function copy(text){ try{ await navigator.clipboard.writeText(text); toast("Kopiert"); }catch{ toast("Bitte manuell markieren und kopieren"); } }
+
+/* ---------- service layer (demo providers, später echte APIs) ---------- */
+const TARIFFS = [
+ // Strom Privat (brutto)
+ {id:"s1",typ:"strom",seg:"privat",anbieter:"ostrom",name:"SimplyFair",gp:9.00,ap:26.9,laufzeit:"1 Monat",garantie:"keine",oeko:true,partner:false,prov:0},
+ {id:"s2",typ:"strom",seg:"privat",anbieter:"LichtBlick",name:"ÖkoStrom Flex",gp:11.90,ap:27.4,laufzeit:"12 Monate",garantie:"12 Monate",oeko:true,partner:true,prov:90},
+ {id:"s3",typ:"strom",seg:"privat",anbieter:"Stadtwerke Bad Kissingen",name:"KissStrom Basis",gp:12.50,ap:28.2,laufzeit:"12 Monate",garantie:"12 Monate",oeko:false,partner:true,prov:70},
+ {id:"s4",typ:"strom",seg:"privat",anbieter:"E.ON",name:"Strom Öko 24",gp:13.95,ap:29.1,laufzeit:"24 Monate",garantie:"24 Monate",oeko:true,partner:true,prov:110},
+ {id:"s5",typ:"strom",seg:"privat",anbieter:"Vattenfall",name:"Natur24",gp:12.00,ap:29.8,laufzeit:"24 Monate",garantie:"24 Monate",oeko:true,partner:false,prov:0},
+ {id:"s6",typ:"strom",seg:"privat",anbieter:"EnBW",name:"Komfort",gp:14.20,ap:31.5,laufzeit:"12 Monate",garantie:"keine",oeko:false,partner:false,prov:0},
+ {id:"s7",typ:"strom",seg:"privat",anbieter:"Octopus Energy",name:"Octopus 12M",gp:10.50,ap:27.9,laufzeit:"12 Monate",garantie:"12 Monate",oeko:true,partner:false,prov:0},
+ // Strom Gewerbe (netto)
+ {id:"sg1",typ:"strom",seg:"gewerbe",anbieter:"Stadtwerke Bad Kissingen",name:"KissStrom Business",gp:14.00,ap:22.4,laufzeit:"24 Monate",garantie:"24 Monate",oeko:false,partner:true,prov:240},
+ {id:"sg2",typ:"strom",seg:"gewerbe",anbieter:"LichtBlick",name:"ÖkoStrom Business",gp:15.50,ap:22.9,laufzeit:"24 Monate",garantie:"24 Monate",oeko:true,partner:true,prov:310},
+ {id:"sg3",typ:"strom",seg:"gewerbe",anbieter:"E.ON",name:"Business Fix 24",gp:16.90,ap:23.6,laufzeit:"24 Monate",garantie:"24 Monate",oeko:false,partner:false,prov:0},
+ {id:"sg4",typ:"strom",seg:"gewerbe",anbieter:"Vattenfall",name:"Gewerbe Natur",gp:13.00,ap:23.1,laufzeit:"12 Monate",garantie:"12 Monate",oeko:true,partner:false,prov:0},
+ {id:"sg5",typ:"strom",seg:"gewerbe",anbieter:"EnBW",name:"Business Plus",gp:17.50,ap:24.4,laufzeit:"36 Monate",garantie:"36 Monate",oeko:false,partner:false,prov:0},
+ // Gas Privat (brutto)
+ {id:"g1",typ:"gas",seg:"privat",anbieter:"Octopus Energy",name:"Gas 12M",gp:10.00,ap:8.9,laufzeit:"12 Monate",garantie:"12 Monate",oeko:false,partner:false,prov:0},
+ {id:"g2",typ:"gas",seg:"privat",anbieter:"Stadtwerke Bad Kissingen",name:"KissGas Basis",gp:12.50,ap:9.1,laufzeit:"12 Monate",garantie:"12 Monate",oeko:false,partner:true,prov:70},
+ {id:"g3",typ:"gas",seg:"privat",anbieter:"LichtBlick",name:"ÖkoGas",gp:13.90,ap:9.3,laufzeit:"12 Monate",garantie:"12 Monate",oeko:true,partner:true,prov:85},
+ {id:"g4",typ:"gas",seg:"privat",anbieter:"E.ON",name:"Erdgas Öko 24",gp:14.50,ap:9.6,laufzeit:"24 Monate",garantie:"24 Monate",oeko:true,partner:false,prov:0},
+ {id:"g5",typ:"gas",seg:"privat",anbieter:"EnBW",name:"Gas Komfort",gp:15.00,ap:10.2,laufzeit:"12 Monate",garantie:"keine",oeko:false,partner:false,prov:0},
+ // Gas Gewerbe (netto)
+ {id:"gg1",typ:"gas",seg:"gewerbe",anbieter:"Stadtwerke Bad Kissingen",name:"KissGas Business",gp:16.00,ap:7.4,laufzeit:"24 Monate",garantie:"24 Monate",oeko:false,partner:true,prov:260},
+ {id:"gg2",typ:"gas",seg:"gewerbe",anbieter:"E.ON",name:"Business Gas Fix",gp:15.00,ap:7.6,laufzeit:"24 Monate",garantie:"24 Monate",oeko:false,partner:false,prov:0},
+ {id:"gg3",typ:"gas",seg:"gewerbe",anbieter:"LichtBlick",name:"ÖkoGas Business",gp:18.00,ap:7.5,laufzeit:"24 Monate",garantie:"24 Monate",oeko:true,partner:true,prov:290},
+ {id:"gg4",typ:"gas",seg:"gewerbe",anbieter:"Vattenfall",name:"Gewerbe Gas",gp:14.00,ap:7.9,laufzeit:"12 Monate",garantie:"12 Monate",oeko:false,partner:false,prov:0}
+];
+const tariffProvider = {
+  /** Später: echte Tarif-API (z. B. GET AG Vertriebsportal). Liefert Tarife inkl. Jahreskosten. */
+  search({seg, typ, plz, kwh}){
+    const digits = String(plz||"97688").replace(/\D/g,"").split("").reduce((a,b)=>a+Number(b),0);
+    const f = 1 + ((digits % 7) - 3) / 100; // regionaler Netzentgelt-Faktor (Demo)
+    return TARIFFS.filter(t=>t.seg===seg && t.typ===typ).map(t=>{
+      const ap = +(t.ap*f).toFixed(2);
+      const cost = t.gp*12 + ap*kwh/100;
+      return {...t, apEff:ap, cost};
+    }).sort((a,b)=>a.cost-b.cost);
+  }
+};
+/** Bestpreis-Logik: ehrliche Anzeige, Ausgleich nur aus der Provision. */
+function bestPrice(results, minMarge){
+  if(!results.length) return {};
+  const cheapest = results[0];
+  if(cheapest.partner) return {cheapest, bestPartner:cheapest, voucher:0, covered:true};
+  const bestPartner = results.find(r=>r.partner);
+  if(!bestPartner) return {cheapest, bestPartner:null, voucher:0, covered:false};
+  const diff = bestPartner.cost - cheapest.cost;
+  const max = Math.max(0, bestPartner.prov - minMarge);
+  const voucher = Math.ceil(diff);
+  return {cheapest, bestPartner, diff, max, voucher: voucher<=max ? voucher : 0, covered: voucher<=max};
+}
+const leadFinderProvider = {
+  /** Später: Google-Maps-/Firmendaten-API. */
+  search(branche, ort){
+    const pre = {"Hotel":["Hotel","Gästehaus","Pension","Kurhotel"],"Bäckerei":["Bäckerei","Backstube","Café-Bäckerei"],"Gastronomie":["Restaurant","Gasthof","Weinstube","Bistro"],"Handwerk":["Schreinerei","Elektro","Sanitär","Malerbetrieb"],"Einzelhandel":["Modehaus","Getränkemarkt","Blumenladen","Buchhandlung"],"Praxis":["Zahnarztpraxis","Physiotherapie","Hausarztpraxis"]}[branche] || ["Betrieb"];
+    const names = ["Sonnenhof","Schäfer","Am Rosengarten","Lindenhof","Meier","Kurpark","Saaletal","Müller & Sohn","Altstadt","Weber"];
+    const out=[]; for(let i=0;i<8;i++){ const kwh = 18000 + ((i*7919+ort.length*131)%9)*9000; out.push({id:uid(),name:`${pre[i%pre.length]} ${names[(i*3+ort.length)%names.length]}`,ort,branche,kwh,tel:`0971 ${4000000+i*13751}`,bewertung:(3.9+((i*37)%11)/10).toFixed(1)}); }
+    return out;
+  }
+};
+const whatsappProvider = { send(lead,text){ return {ok:true, demo:true}; } };
+
+/* ---------- state ---------- */
+const KEY="nexxos-demo-v1";
+const STAGES=[["neu","Neu"],["kontaktiert","Kontaktiert"],["angebot","Angebot"],["abschluss","Abschluss"],["verloren","Verloren"]];
+const seed = () => ({
+  leads:[
+    {id:"l1",name:"Gasthof Lindenhof",kontakt:"Maria Hofmann",tel:"0971 7854112",seg:"gewerbe",typ:"strom",kwh:42000,quelle:"Google-Maps-Suche",stage:"angebot",wv:addDays(0),ablauf:addDays(74),verlauf:[{d:addDays(-6),t:"Erstkontakt telefonisch, Interesse an Festpreis"},{d:addDays(-2),t:"Angebot KissStrom Business per Link gesendet"}]},
+    {id:"l2",name:"Familie Krämer",kontakt:"Jonas Krämer",tel:"0163 5528741",seg:"privat",typ:"strom",kwh:3800,quelle:"Meta-Ads",stage:"neu",wv:addDays(0),ablauf:addDays(160),verlauf:[{d:addDays(0),t:"Lead über Meta-Kampagne „Stromkosten senken“"}]},
+    {id:"l3",name:"Bäckerei Saaletal",kontakt:"Thomas Engel",tel:"0971 6631907",seg:"gewerbe",typ:"gas",kwh:68000,quelle:"Tippgeber",stage:"kontaktiert",wv:addDays(1),ablauf:addDays(45),verlauf:[{d:addDays(-3),t:"Tipp von Partner Lena Vogt"},{d:addDays(-1),t:"Rückruf vereinbart, Jahresabrechnung angefordert"}]},
+    {id:"l4",name:"Praxis Dr. Seidel",kontakt:"Dr. Anja Seidel",tel:"0971 5512230",seg:"gewerbe",typ:"strom",kwh:24000,quelle:"manuell",stage:"abschluss",wv:"",ablauf:addDays(730),verlauf:[{d:addDays(-9),t:"Abschluss LichtBlick ÖkoStrom Business"}]},
+    {id:"l5",name:"Herr Bauer",kontakt:"Klaus Bauer",tel:"0151 2209876",seg:"privat",typ:"gas",kwh:16000,quelle:"Meta-Ads",stage:"kontaktiert",wv:addDays(0),ablauf:addDays(88),verlauf:[{d:addDays(-1),t:"WhatsApp-Begrüßung automatisch versendet"}]},
+    {id:"l6",name:"Pension Kurpark",kontakt:"Sabine Roth",tel:"0971 3367451",seg:"gewerbe",typ:"gas",kwh:51000,quelle:"Google-Maps-Suche",stage:"neu",wv:addDays(2),ablauf:addDays(120),verlauf:[]},
+    {id:"l7",name:"Familie Yilmaz",kontakt:"Aylin Yilmaz",tel:"0176 4410982",seg:"privat",typ:"strom",kwh:2900,quelle:"Tippgeber",stage:"abschluss",wv:"",ablauf:addDays(365),verlauf:[{d:addDays(-12),t:"Abschluss ostrom-Alternative mit Gutschein"}]},
+    {id:"l8",name:"Autohaus Wenzel",kontakt:"Peter Wenzel",tel:"0971 2298455",seg:"gewerbe",typ:"strom",kwh:96000,quelle:"manuell",stage:"verloren",wv:"",ablauf:"",verlauf:[{d:addDays(-20),t:"Bleibt beim Bestandsversorger"}]}
+  ],
+  automations:[
+    {id:"a1",on:true,name:"Neuer Meta-Lead begrüßen",trigger:"Neuer Lead aus Meta-Ads",steps:["WhatsApp-Begrüßung senden","Wiedervorlage in 2 Tagen"],runs:38},
+    {id:"a2",on:true,name:"Vertragsende im Blick",trigger:"Vertragsende in 90 Tagen",steps:["Erinnerung an Vertriebler","Tarifvergleich vorbereiten"],runs:12},
+    {id:"a3",on:false,name:"Angebot nachfassen",trigger:"Angebot 3 Tage ohne Antwort",steps:["WhatsApp-Nachfass senden","Aufgabe „Anrufen“ anlegen"],runs:0},
+    {id:"a4",on:true,name:"Tipp eingegangen",trigger:"Neuer Tipp von Tippgeber",steps:["Lead im CRM anlegen","Tippgeber per E-Mail bestätigen"],runs:9}
+  ],
+  wl:{name:"PowerNexx",accent:"",domain:"",logo:""},
+  settings:{minMarge:20},
+  chat:[]
+});
+let S;
+try{ S = JSON.parse(localStorage.getItem(KEY)) || seed(); }catch{ S = seed(); }
+if(S.wl && (!S.wl.name || S.wl.name==="NexxOS")) S.wl.name="PowerNexx";
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch{} };
+
+/* Partner-/Provisionsdaten (Demo) */
+const TEAM = {name:"Du",rank:"Teamleiter",children:[
+  {name:"Lena Vogt",rank:"Partner",lic:149,umsatz:1840,children:[{name:"Marco Fuchs",rank:"Partner",lic:149,umsatz:920,children:[{name:"Ines Hahn",rank:"Tippgeber",lic:0,umsatz:260,children:[]}]},{name:"Sarah Kühn",rank:"Partner",lic:49,umsatz:610,children:[]}]},
+  {name:"Daniel Brandt",rank:"Partner",lic:149,umsatz:2310,children:[{name:"Kevin Ott",rank:"Partner",lic:149,umsatz:1150,children:[{name:"Julia Lenz",rank:"Partner",lic:49,umsatz:480,children:[]}]}]},
+  {name:"Petra Lang",rank:"Partner",lic:49,umsatz:720,children:[]},
+  {name:"Ali Demir",rank:"Partner",lic:149,umsatz:1390,children:[]},
+  {name:"Nina Graf",rank:"Tippgeber",lic:0,umsatz:180,children:[]}
+]};
+const RATES = {1:.10,2:.05,3:.02};
+function overrides(){
+  const rows=[]; const walk=(n,lvl)=>{ for(const c of n.children){ const basis=c.lic+c.umsatz; rows.push({name:c.name,lvl,basis,rate:RATES[lvl],amount:basis*RATES[lvl]}); if(lvl<3) walk(c,lvl+1);} };
+  walk(TEAM,1); return rows;
+}
+const OWN = [
+  {d:addDays(-2),kunde:"Praxis Dr. Seidel",tarif:"LichtBlick ÖkoStrom Business",prov:310,status:"beliefert"},
+  {d:addDays(-5),kunde:"Familie Yilmaz",tarif:"LichtBlick ÖkoStrom Flex",prov:90,status:"beliefert",gutschein:37},
+  {d:addDays(-8),kunde:"Café am Markt",tarif:"KissStrom Business",prov:240,status:"beliefert"},
+  {d:addDays(-11),kunde:"Herr Schmitt",tarif:"KissGas Basis",prov:70,status:"storniert"},
+  {d:addDays(-14),kunde:"Hotel Sonnenhof",tarif:"KissGas Business",prov:260,status:"in Belieferung"}
+];
+
+/* ---------- nav ---------- */
+const ICON = {
+  dashboard:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
+  vergleich:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  crm:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+  finder:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  nexxi:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/>',
+  auto:'<path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/>',
+  partner:'<circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v4M12 12l-5 4.5M12 12l5 4.5"/>',
+  wl:'<path d="M12 22a10 10 0 1 1 10-10c0 3-2 4-4 4h-2a2 2 0 0 0-1 3.7A2 2 0 0 1 12 22z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/>',
+  pakete:'<path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>',
+  start:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>'
+};
+const ROUTES = [
+  ["Arbeit",[["dashboard","Dashboard"],["vergleich","Tarifvergleich"],["crm","Leads & CRM"],["finder","Lead-Finder"],["nexxi","KI-Assistent Nexxi"],["auto","Automationen"]]],
+  ["Netzwerk",[["partner","Partnerprogramm"],["wl","White Label"],["pakete","Pakete"]]],
+  ["Öffentlich",[["start","Landingpage"]]]
+];
+function renderNav(active){
+  $("#nav").innerHTML = ROUTES.map(([g,items])=>`<div class="nav-group">${g}</div>`+items.map(([id,label])=>`<a href="#${id}" ${id===active?'aria-current="page"':""}><svg viewBox="0 0 24 24">${ICON[id]}</svg>${label}</a>`).join("")).join("");
+}
+
+/* ---------- views ---------- */
+const V = {};
+let cmp = {seg:"privat",typ:"strom",plz:"97688",kwh:3500,ran:true};
+
+V.dashboard = () => {
+  const open = S.leads.filter(l=>!["abschluss","verloren"].includes(l.stage)).length;
+  const won = S.leads.filter(l=>l.stage==="abschluss").length;
+  const provOwn = OWN.filter(o=>o.status!=="storniert").reduce((a,o)=>a+o.prov,0);
+  const ov = overrides().reduce((a,r)=>a+r.amount,0);
+  const teamU = overrides().reduce((a,r)=>a+r.basis,0);
+  const todo = S.leads.filter(l=>l.wv && l.wv<=addDays(0) && !["abschluss","verloren"].includes(l.stage));
+  const expiring = S.leads.filter(l=>l.ablauf && l.ablauf<=addDays(90) && l.stage!=="verloren");
+  const acts = S.leads.flatMap(l=>l.verlauf.map(v=>({...v,name:l.name}))).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,6);
+  return `
+  <div class="head"><div><div class="eyebrow">${today.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long"})}</div><h1>Guten Morgen, Sveni</h1><p>Dein Tag auf einen Blick: wer heute dran ist, was gerade läuft und was das Team umsetzt.</p></div>
+  <div class="row"><a class="btn" href="#crm">Lead anlegen</a><a class="btn primary" href="#vergleich">Tarif vergleichen</a></div></div>
+  <div class="grid g4">
+    <div class="panel kpi"><span class="label">Abschlüsse diesen Monat</span><span class="value">${won+3}</span><span class="delta">+2 ggü. Vormonat</span></div>
+    <div class="panel kpi"><span class="label">Offene Leads</span><span class="value">${open}</span><span class="delta" style="color:var(--warn)">${todo.length} heute fällig</span></div>
+    <div class="panel kpi"><span class="label">Provision Monat (eigen + Overrides)</span><span class="value">${eur(provOwn+ov,0)}</span><span class="delta">davon Overrides ${eur(ov,0)}</span></div>
+    <div class="panel kpi"><span class="label">Team-Umsatz Monat</span><span class="value">${eur(teamU,0)}</span><span class="delta">${overrides().length} Partner in 3 Ebenen</span></div>
+  </div>
+  <div class="grid g-dash">
+    <section class="panel"><div class="panel-head"><h2>Heute wichtig</h2><a class="btn small" href="#nexxi" data-plan="1">Tagesplan von Nexxi</a></div>
+      <ul class="list">${todo.map(l=>`<li><span class="dot" style="background:var(--warn)"></span><div style="flex:1;min-width:0"><b>${esc(l.name)}</b> <span class="muted small">· ${esc(STAGES.find(s=>s[0]===l.stage)[1])}</span><div class="small muted">${esc(l.verlauf.at(-1)?.t || "Erstkontakt aufnehmen")}</div></div><button class="btn small" data-open-lead="${l.id}">Öffnen</button></li>`).join("") || `<li class="muted">Keine Wiedervorlagen für heute.</li>`}
+      ${expiring.slice(0,3).map(l=>`<li><span class="dot" style="background:var(--info)"></span><div style="flex:1"><b>${esc(l.name)}</b><div class="small muted">Vertrag läuft am ${fmtDate(l.ablauf)} aus. Jetzt Wechsel vorbereiten.</div></div><button class="btn small" data-compare-lead="${l.id}">Vergleichen</button></li>`).join("")}</ul>
+    </section>
+    <section class="panel"><div class="panel-head"><h2>Letzte Aktivitäten</h2></div>
+      <ul class="list">${acts.map(a=>`<li><span class="mono small muted" style="width:76px;flex:none">${fmtDate(a.d).slice(0,6)}</span><div><b class="small">${esc(a.name)}</b><div class="small muted">${esc(a.t)}</div></div></li>`).join("")}</ul>
+    </section>
+  </div>`;
+};
+
+V.vergleich = () => {
+  const res = tariffProvider.search(cmp);
+  const bp = bestPrice(res, S.settings.minMarge);
+  const brutto = cmp.seg==="privat" ? "brutto" : "netto zzgl. MwSt.";
+  const unit = cmp.typ==="strom" ? "Strom" : "Gas";
+  const card = (t, extra="") => `
+    <div class="tariff ${extra}">
+      <div class="t-main t-cell"><div class="row" style="gap:6px">${t.partner?'<span class="pill partner">Partner-Tarif</span>':'<span class="pill market">Marktangebot</span>'}${t.oeko?'<span class="pill oeko">Öko</span>':""}${extra.includes("cheapest")?'<span class="pill volt">Günstigster am Markt</span>':""}</div>
+        <div class="t-name" style="margin-top:6px">${esc(t.anbieter)} · ${esc(t.name)}</div><div class="t-meta">Laufzeit ${esc(t.laufzeit)} · Preisgarantie ${esc(t.garantie)}</div></div>
+      <div class="t-cell"><div class="k">Grundpreis</div><div class="num">${eur(t.gp)}/Monat</div></div>
+      <div class="t-cell"><div class="k">Arbeitspreis</div><div class="num">${num(t.apEff,2)} ct/kWh</div></div>
+      <div class="t-cell"><div class="k">Provision</div><div class="num">${t.partner?eur(t.prov,0):"–"}</div></div>
+      <div class="t-cost"><div class="big">${eur(t.cost,0)}</div><div class="t-meta">pro Jahr, ${brutto}</div>
+        ${t.partner?`<button class="btn small primary" style="margin-top:6px" data-offer="${t.id}">Angebot per Link</button>`:""}</div>
+      ${extra.includes("best-partner") && bp.voucher>0 ? `<div class="voucher"><span>Bestpreis-Gutschein</span><code>NEXX-${bp.voucher}</code><span class="small">Gleicht ${eur(bp.diff)} Differenz aus · effektiv <b class="num">${eur(t.cost-bp.voucher,0)}</b> im ersten Jahr · finanziert aus Provision (${eur(t.prov,0)} − Mindestmarge ${eur(S.settings.minMarge,0)})</span></div>`:""}
+    </div>`;
+  let top = "";
+  if(bp.cheapest && !bp.cheapest.partner && bp.bestPartner){
+    top = card(bp.cheapest,"cheapest") + card(bp.bestPartner,"best-partner") +
+      (bp.covered ? "" : `<div class="notice">Kein Gutschein möglich: Die Differenz von ${eur(bp.diff)} übersteigt den Spielraum aus der Provision (max. ${eur(bp.max,0)}). Der günstigere Markttarif bleibt vorne.</div>`);
+  } else if(bp.cheapest){ top = card(bp.cheapest,"cheapest best-partner"); }
+  const rest = res.filter(r=>r!==bp.cheapest && r!==bp.bestPartner);
+  return `
+  <div class="head"><div><div class="eyebrow">Kernmodul</div><h1>Tarifvergleich ${unit}</h1><p>Alle Tarife wie in einer Hotel-Metasuche. Der günstigste Tarif steht immer oben, auch wenn er kein Partner-Tarif ist. Der Gutschein gleicht die Differenz aus deiner Provision aus.</p></div></div>
+  <form class="panel" id="cmpForm">
+    <div class="row" style="gap:14px;align-items:flex-end">
+      <div class="field"><label>Kundenart</label><div class="seg" role="group"><button type="button" data-seg="privat" aria-pressed="${cmp.seg==="privat"}">Privat</button><button type="button" data-seg="gewerbe" aria-pressed="${cmp.seg==="gewerbe"}">Gewerbe</button></div></div>
+      <div class="field"><label>Sparte</label><div class="seg" role="group"><button type="button" data-typ="strom" aria-pressed="${cmp.typ==="strom"}">Strom</button><button type="button" data-typ="gas" aria-pressed="${cmp.typ==="gas"}">Gas</button></div></div>
+      <div class="field" style="width:120px"><label for="plz">PLZ</label><input class="input mono" id="plz" inputmode="numeric" maxlength="5" value="${esc(cmp.plz)}"></div>
+      <div class="field" style="width:160px"><label for="kwh">Jahresverbrauch kWh</label><input class="input mono" id="kwh" inputmode="numeric" value="${cmp.kwh}"></div>
+      <div class="field" style="width:150px"><label for="marge">Mindestmarge €</label><input class="input mono" id="marge" inputmode="numeric" value="${S.settings.minMarge}"></div>
+      <button class="btn primary" type="submit">Vergleichen</button>
+    </div>
+  </form>
+  <div class="row"><b>${res.length} Tarife</b><span class="muted small">für PLZ ${esc(cmp.plz)}, ${num(cmp.kwh)} kWh/Jahr, sortiert nach Jahreskosten · Demo-Tarife</span></div>
+  <div class="tariffs">${top}${rest.map(t=>card(t)).join("")}</div>
+  <p class="notice">Der Vergleich umfasst nicht den gesamten Markt. Wir erhalten bei Abschluss von Partner-Tarifen eine Provision. Gutscheine werden offen ausgewiesen, Tarifpreise werden nie verändert.</p>`;
+};
+
+V.crm = () => `
+  <div class="head"><div><div class="eyebrow">Pipeline</div><h1>Leads & CRM</h1><p>Karten zwischen den Spalten ziehen oder Lead öffnen. Wiedervorlagen und Vertragsabläufe landen automatisch auf dem Dashboard.</p></div>
+  <div class="row"><a class="btn" href="#finder">Lead-Finder</a><button class="btn primary" data-new-lead>Lead anlegen</button></div></div>
+  <div class="kanban">${STAGES.map(([k,label])=>{ const ls=S.leads.filter(l=>l.stage===k); return `<div class="col" data-col="${k}"><div class="col-head"><span>${label}</span><span class="mono muted">${ls.length}</span></div>
+    ${ls.map(l=>`<button class="card" draggable="true" data-card="${l.id}" data-open-lead="${l.id}"><span class="c-name">${esc(l.name)}</span><span class="c-sub">${l.seg==="privat"?"Privat":"Gewerbe"} · ${l.typ==="strom"?"Strom":"Gas"} · <span class="mono">${num(l.kwh)} kWh</span></span><span class="row" style="gap:4px"><span class="pill info">${esc(l.quelle)}</span>${l.wv&&l.wv<=addDays(0)&&!["abschluss","verloren"].includes(k)?'<span class="pill volt">heute</span>':""}</span></button>`).join("") || '<div class="empty small">Leer</div>'}
+  </div>`;}).join("")}</div>`;
+
+let finderResults = leadFinderProvider.search("Hotel","Bad Kissingen");
+let finderQ = {branche:"Hotel",ort:"Bad Kissingen"};
+V.finder = () => `
+  <div class="head"><div><div class="eyebrow">Akquise</div><h1>Lead-Finder</h1><p>Gewerbliche Betriebe nach Branche und Ort finden und mit einem Klick ins CRM übernehmen. Später angebunden an Google-Maps-Daten.</p></div></div>
+  <form class="panel" id="finderForm"><div class="row" style="align-items:flex-end;gap:14px">
+    <div class="field" style="width:200px"><label for="branche">Branche</label><select class="input" id="branche">${["Hotel","Gastronomie","Bäckerei","Handwerk","Einzelhandel","Praxis"].map(b=>`<option ${b===finderQ.branche?"selected":""}>${b}</option>`).join("")}</select></div>
+    <div class="field" style="width:220px"><label for="ort">Ort</label><input class="input" id="ort" value="${esc(finderQ.ort)}"></div>
+    <button class="btn primary" type="submit">Betriebe suchen</button></div></form>
+  <div class="panel"><div class="table-wrap"><table><thead><tr><th>Betrieb</th><th>Ort</th><th class="r">Geschätzter Verbrauch</th><th class="r">Bewertung</th><th>Telefon</th><th></th></tr></thead><tbody>
+  ${finderResults.map(r=>{ const inCrm=S.leads.some(l=>l.name===r.name); return `<tr><td><b>${esc(r.name)}</b><div class="small muted">${esc(r.branche)}</div></td><td>${esc(r.ort)}</td><td class="r num">${num(r.kwh)} kWh</td><td class="r num">${r.bewertung} ★</td><td class="mono small">${esc(r.tel)}</td><td class="r">${inCrm?'<span class="pill partner">im CRM</span>':`<button class="btn small" data-take="${r.id}">Ins CRM übernehmen</button>`}</td></tr>`;}).join("")}
+  </tbody></table></div><p class="small muted" style="margin-top:10px">Demo-Treffer. Verbrauch geschätzt aus Branche und Betriebsgröße.</p></div>`;
+
+const QUICK = [["Einwand behandeln","Ein Gewerbekunde sagt: „Wir sind beim Stadtwerk seit 20 Jahren zufrieden, Wechsel ist uns zu aufwendig.“ Gib mir drei Antworten für das Telefonat."],["Angebotstext schreiben","Schreib einen kurzen Angebotstext für Gasthof Lindenhof (42.000 kWh Strom, Tarif KissStrom Business, 24 Monate Preisgarantie)."],["Tagesplan erstellen",null],["Tarif erklären","Erkläre einem Privatkunden in einfachen Worten den Unterschied zwischen Grundpreis und Arbeitspreis und warum Preisgarantie wichtig ist."],["WhatsApp-Nachricht formulieren","Formuliere eine freundliche WhatsApp-Nachricht an Herrn Bauer, der gestern über Meta-Ads angefragt hat (Gas, 16.000 kWh). Ziel: kurzer Rückruftermin."]];
+function planPrompt(){
+  const items = S.leads.filter(l=>!["abschluss","verloren"].includes(l.stage)).map(l=>`- ${l.name} (${l.seg}, ${l.typ}, ${l.kwh} kWh), Status ${l.stage}, Wiedervorlage ${l.wv||"keine"}, Vertragsende ${l.ablauf||"unbekannt"}, letzte Notiz: ${l.verlauf.at(-1)?.t||"keine"}`).join("\n");
+  return `Erstelle mir einen priorisierten Tagesplan für heute (${today.toLocaleDateString("de-DE")}). Meine offenen Leads:\n${items}\nGib Uhrzeit-Blöcke von 8 bis 17 Uhr mit konkreten Aktionen.`;
+}
+const RULES = "Du bist Nexxi, der KI-Assistent im Vertriebsbüro PowerNexx. Du coachst Handelsvertreter im Energievertrieb (Strom und Gas, Privat- und Gewerbekunden) in Deutschland. Antworte auf Deutsch, direkt, praxisnah und knapp, ohne Vorgeplänkel. Nutze kurze Absätze oder nummerierte Punkte, kein Markdown-Fettdruck. Erfinde keine konkreten Marktpreise; arbeite mit den Angaben aus der Frage. Empfiehl nie, Preise zu manipulieren oder Kunden zu täuschen; Gutscheine nur transparent.";
+V.nexxi = () => `
+  <div class="head"><div><div class="eyebrow">KI-Assistent</div><h1>Nexxi</h1><p>Dein Vertriebs-Coach: Einwände, Angebotstexte, Tagespläne und WhatsApp-Nachrichten. Antworten laufen über dein Claude-Konto.</p></div>
+  <button class="btn" data-clear-chat>Verlauf leeren</button></div>
+  <section class="panel chat">
+    <div class="msgs" id="msgs">${S.chat.length?S.chat.map(m=>`<div class="msg ${m.role==="user"?"me":"ai"}">${esc(m.content)}</div>`).join(""):`<div class="msg ai">Hallo Sveni, ich bin Nexxi. Wähle unten eine Schnellaktion oder frag mich direkt, zum Beispiel: „Wie überzeuge ich eine Hausverwaltung mit 12 Objekten?“</div>`}</div>
+    <div class="chips" style="margin-bottom:10px">${QUICK.map(([l],i)=>`<button class="chip" data-quick="${i}">${l}</button>`).join("")}</div>
+    <form class="composer" id="chatForm"><input class="input" id="chatIn" placeholder="Frag Nexxi…" autocomplete="off"><button class="btn primary" id="chatSend" type="submit">Senden</button><button class="btn" id="chatStop" type="button" hidden>Stopp</button></form>
+    <p class="small muted" id="chatNote" style="margin-top:8px"></p>
+  </section>`;
+
+const TRIGGERS=["Neuer Lead aus Meta-Ads","Neuer Lead aus Lead-Finder","Neuer Tipp von Tippgeber","Angebot 3 Tage ohne Antwort","Vertragsende in 90 Tagen","Abschluss erfasst"];
+const ACTIONS=["WhatsApp-Begrüßung senden","WhatsApp-Nachfass senden","Wiedervorlage in 2 Tagen","Aufgabe „Anrufen“ anlegen","Erinnerung an Vertriebler","Tarifvergleich vorbereiten","Lead im CRM anlegen","Tippgeber per E-Mail bestätigen","Bewertungsanfrage senden"];
+V.auto = () => `
+  <div class="head"><div><div class="eyebrow">Autopilot</div><h1>Automationen</h1><p>Wenn etwas passiert, erledigt PowerNexx die nächsten Schritte. Jeder Ablauf lässt sich einzeln an- und ausschalten.</p></div></div>
+  <div class="grid g-dash">
+  <section class="panel"><div class="panel-head"><h2>Aktive Abläufe</h2><span class="muted small">${S.automations.filter(a=>a.on).length} von ${S.automations.length} an</span></div>
+   <ul class="list">${S.automations.map(a=>`<li><label class="toggle" title="An/Aus"><input type="checkbox" id="auto-${a.id}" data-auto="${a.id}" ${a.on?"checked":""} aria-label="${esc(a.name)} an/aus"><span></span></label>
+    <div style="flex:1;min-width:0"><b>${esc(a.name)}</b><div class="flow" style="margin-top:6px"><span class="step" style="background:var(--volt-soft)">${esc(a.trigger)}</span>${a.steps.map(s=>`<span class="arrow">→</span><span class="step">${esc(s)}</span>`).join("")}</div></div>
+    <span class="small muted mono">${a.runs}× gelaufen</span></li>`).join("")}</ul></section>
+  <form class="panel" id="autoForm"><div class="panel-head"><h2>Neuer Ablauf</h2></div>
+   <div class="grid" style="gap:12px">
+    <div class="field"><label for="aName">Name</label><input class="input" id="aName" placeholder="z. B. Gewerbe-Lead vorqualifizieren" required></div>
+    <div class="field"><label for="aTrig">Wenn …</label><select class="input" id="aTrig">${TRIGGERS.map(t=>`<option>${t}</option>`).join("")}</select></div>
+    <div class="field"><label for="aAct1">dann …</label><select class="input" id="aAct1">${ACTIONS.map(t=>`<option>${t}</option>`).join("")}</select></div>
+    <div class="field"><label for="aAct2">und danach (optional)</label><select class="input" id="aAct2"><option value="">–</option>${ACTIONS.map(t=>`<option>${t}</option>`).join("")}</select></div>
+    <button class="btn primary" type="submit">Ablauf speichern</button></div></form>
+  </div>`;
+
+V.partner = () => {
+  const ov = overrides(); const sum = ov.reduce((a,r)=>a+r.amount,0);
+  const own = OWN.filter(o=>o.status!=="storniert").reduce((a,o)=>a+o.prov,0);
+  const directActive = TEAM.children.filter(c=>c.rank!=="Tippgeber").length;
+  const ranks=[["Tippgeber","Tipps abgeben"],["Partner","Eigene Abschlüsse + Ebene 1"],["Teamleiter","ab 5 aktiven Partnern, + Ebene 2"],["Direktor","ab 3 Teamleitern, + Ebene 3"]];
+  const tree = n => n.children.length?`<ul>${n.children.map(c=>`<li><span class="node"><b>${esc(c.name)}</b><span class="pill ${c.rank==="Tippgeber"?"market":"partner"}">${c.rank}</span><span class="mono small muted">${eur(c.lic+c.umsatz,0)}</span></span>${tree(c)}</li>`).join("")}</ul>`:"";
+  return `
+  <div class="head"><div><div class="eyebrow">Netzwerk</div><h1>Partnerprogramm</h1><p>Du verdienst an eigenen Abschlüssen und an den echten Umsätzen deines Teams, über maximal drei Ebenen. Für das reine Anwerben gibt es keine Provision.</p></div></div>
+  <div class="grid g4">
+    <div class="panel kpi"><span class="label">Mein Rang</span><span class="value" style="font-family:var(--f-display);font-size:1.4rem">Teamleiter</span><span class="delta">Ebenen 1 und 2 aktiv</span></div>
+    <div class="panel kpi"><span class="label">Eigene Provision (Monat)</span><span class="value">${eur(own,0)}</span><span class="delta" style="color:var(--bad)">1 Storno abgezogen</span></div>
+    <div class="panel kpi"><span class="label">Overrides (Monat)</span><span class="value">${eur(sum,0)}</span><span class="delta">${ov.length} Partner beitragend</span></div>
+    <div class="panel kpi"><span class="label">Bis Direktor</span><span class="value">1 / 3</span><span class="delta">Teamleiter in deiner Linie</span></div>
+  </div>
+  <section class="panel"><div class="panel-head"><h2>Rangstufen</h2><span class="small muted">Ebene 1: 10 % · Ebene 2: 5 % · Ebene 3: 2 % auf bezahlte Lizenzen und belieferte Verträge</span></div>
+    <div class="ranks">${ranks.map(([r,d])=>`<div class="rank ${r==="Teamleiter"?"on":""}"><b>${r}</b><span class="muted">${d}</span></div>`).join("")}</div>
+    <div style="margin-top:14px" class="small">Fortschritt zum Direktor: <b>1 von 3 Teamleitern</b> · ${directActive} aktive Direktpartner</div>
+    <div class="progress" style="margin-top:6px"><i style="width:33%"></i></div>
+  </section>
+  <div class="split">
+    <section class="panel"><div class="panel-head"><h2>Mein Team</h2><span class="small muted">Lizenz + Vertragsumsatz / Monat</span></div>
+      <ul class="tree"><li><span class="node"><b>Du</b><span class="pill partner">Teamleiter</span></span>${tree(TEAM)}</li></ul></section>
+    <section class="panel"><div class="panel-head"><h2>Override-Abrechnung</h2></div>
+      <div class="table-wrap"><table><thead><tr><th>Partner</th><th>Ebene</th><th class="r">Basis</th><th class="r">Satz</th><th class="r">Override</th></tr></thead><tbody>
+      ${ov.map(r=>`<tr><td>${esc(r.name)}</td><td class="mono">${r.lvl}</td><td class="r num">${eur(r.basis,0)}</td><td class="r num">${num(r.rate*100)} %</td><td class="r num">${eur(r.amount)}</td></tr>`).join("")}
+      <tr><td colspan="4"><b>Summe</b></td><td class="r num"><b>${eur(sum)}</b></td></tr></tbody></table></div></section>
+  </div>
+  <section class="panel"><div class="panel-head"><h2>Eigene Abschlüsse</h2></div><div class="table-wrap"><table><thead><tr><th>Datum</th><th>Kunde</th><th>Tarif</th><th>Status</th><th class="r">Gutschein</th><th class="r">Provision</th></tr></thead><tbody>
+    ${OWN.map(o=>`<tr><td class="mono">${fmtDate(o.d)}</td><td>${esc(o.kunde)}</td><td>${esc(o.tarif)}</td><td>${o.status==="storniert"?'<span class="pill bad">storniert</span>':o.status==="beliefert"?'<span class="pill partner">beliefert</span>':'<span class="pill volt">in Belieferung</span>'}</td><td class="r num">${o.gutschein?"−"+eur(o.gutschein,0):"–"}</td><td class="r num" ${o.status==="storniert"?'style="text-decoration:line-through;color:var(--muted)"':""}>${eur(o.prov-(o.gutschein||0),0)}</td></tr>`).join("")}
+  </tbody></table></div></section>
+  <section class="panel"><div class="panel-head"><h2>Persönlicher Einladungslink</h2></div>
+    <div class="row"><input class="input mono" id="invite" readonly value="${ARTIFACT_URL}#start"><button class="btn primary" data-copy="#invite">Kopieren</button></div>
+    <p class="small muted" style="margin-top:8px">Neue Partner landen in deiner Ebene 1. Du verdienst erst, wenn sie eine Lizenz bezahlen oder Verträge beliefert werden.</p></section>`;
+};
+
+V.wl = () => `
+  <div class="head"><div><div class="eyebrow">Einstellungen</div><h1>White Label</h1><p>Agenturen und Strukturvertriebe nutzen PowerNexx unter eigenem Namen, Logo, Farbe und Domain. Änderungen wirken sofort auf die ganze App.</p></div></div>
+  <div class="split">
+  <form class="panel" id="wlForm"><div class="grid" style="gap:14px">
+    <div class="field"><label for="wlName">Firmen- bzw. App-Name</label><input class="input" id="wlName" value="${esc(S.wl.name)}"></div>
+    <div class="field"><label for="wlAccent">Akzentfarbe</label><div class="row"><input type="color" id="wlAccent" value="${S.wl.accent||"#0f8a6c"}" style="width:48px;height:38px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:2px"><span class="small muted">Leer lassen = PowerNexx-Grün</span></div></div>
+    <div class="field"><label for="wlDomain">Eigene Domain</label><input class="input mono" id="wlDomain" placeholder="app.deine-agentur.de" value="${esc(S.wl.domain)}"></div>
+    <div class="field"><label for="wlLogo">Logo (PNG, JPG oder SVG)</label><input class="input" type="file" id="wlLogo" accept="image/*"></div>
+    <div class="row"><button class="btn primary" type="submit">Übernehmen</button><button class="btn" type="button" data-wl-reset>Zurücksetzen</button></div>
+    <p class="small muted">DNS: CNAME von deiner Domain auf <span class="mono">wl.powernexx.de</span>. In dieser Demo wird die Domain nur gespeichert.</p>
+  </div></form>
+  <section class="panel"><div class="panel-head"><h2>Vorschau für deine Partner</h2></div>
+    <div class="wl-preview"><div class="side" style="background:var(--rail);color:var(--rail-fg)"><div class="row" style="gap:6px"><span style="width:20px;height:20px;border-radius:5px;background:var(--accent);display:inline-block;overflow:hidden">${S.wl.logo?`<img src="${S.wl.logo}" alt="" style="width:100%;height:100%;object-fit:cover">`:""}</span><b>${esc(S.wl.name)}</b></div><span>Dashboard</span><span>Tarifvergleich</span><span>Leads</span></div>
+    <div class="body"><b>${esc(S.wl.domain||"buero.powernexx.de")}</b><div class="bar" style="width:70%"></div><div class="bar" style="width:45%"></div><span class="btn small primary" style="width:max-content">Tarif vergleichen</span><div class="bar"></div></div></div>
+    <p class="small muted" style="margin-top:10px">Paket White Label: 990 € Einrichtung + 499 €/Monat, inklusive 10 Pro-Zugänge und eigener Partnerstruktur.</p></section>
+  </div>`;
+
+V.pakete = () => {
+  const plans=[["Tippgeber","0 €","dauerhaft",["Tipps abgeben","Provision bei Abschluss","Status jedes Tipps live"],false],["Starter","49 €","pro Monat",["Tarifvergleich Privat + Gewerbe","Bestpreis-Gutscheine","CRM bis 500 Kontakte","Nexxi Basis"],false],["Pro","149 €","pro Monat",["Alles aus Starter","Lead-Maschine & Lead-Finder","Dialer & WhatsApp","Automationen","Partnerprogramm 3 Ebenen"],true],["White Label","499 €","pro Monat + 990 € Einrichtung",["Eigene Marke, Farbe, Domain","10 Pro-Zugänge inklusive","Eigene Partnerstruktur","Umsatzbeteiligung"],false]];
+  return `<div class="head"><div><div class="eyebrow">Abo</div><h1>Pakete</h1><p>Monatlich kündbar. Preise netto zzgl. MwSt. Bezahlung später über Stripe.</p></div></div>
+  <div class="grid g4">${plans.map(([n,p,u,f,feat])=>`<div class="panel plan ${feat?"featured":""}">${feat?'<span class="pill partner" style="width:max-content">Empfohlen</span>':""}<h2>${n}</h2><div><span class="price">${p}</span><div class="small muted">${u}</div></div><ul>${f.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn ${feat?"primary":""}" style="margin-top:auto" data-buy="${n}">${n==="Tippgeber"?"Kostenlos starten":"Auswählen"}</button></div>`).join("")}</div>`;
+};
+
+V.start = () => `
+  <div class="landing">
+  <section class="hero"><div style="display:flex;flex-direction:column;gap:18px">
+    <div class="eyebrow">Für Handelsvertreter Strom & Gas</div>
+    <h1>Vergleichen, abschließen, nachfassen. Ein Büro für deinen ganzen Vertrieb.</h1>
+    <p>${esc(S.wl.name)} zeigt jeden Tarif am Markt, gleicht Preisunterschiede per Gutschein aus deiner Provision aus, findet neue Gewerbekunden und erinnert dich, bevor ein Vertrag ausläuft.</p>
+    <div class="row"><a class="btn primary" href="#dashboard">Kostenlos registrieren</a><a class="btn" href="#dashboard">Anmelden</a></div>
+    <p class="small muted">14 Tage Pro testen · keine Kreditkarte nötig</p></div>
+    <div class="meter" aria-label="Beispielrechnung"><div class="meter-row"><span>KUNDE</span><b>Gasthof · 42.000 kWh</b></div>
+      <div class="lcd">−1.218,40 €</div>
+      <div class="meter-row"><span>Bisher Grundversorgung</span><b>13.104 €/Jahr</b></div>
+      <div class="meter-row"><span>KissStrom Business</span><b>11.886 €/Jahr</b></div>
+      <div class="meter-row"><span>Deine Provision</span><b>240 €</b></div></div></section>
+  <section class="features">${[["Tarifvergleich wie im Hotelportal","Privat und Gewerbe, Strom und Gas. Ehrlich sortiert, mit Bestpreis-Gutschein und Abschluss per Link."],["Leads, die nicht versanden","Meta-Ads, Lead-Finder und Tippgeber laufen in ein CRM mit Wiedervorlagen, Dialer und WhatsApp."],["Nexxi, dein KI-Coach","Einwände, Angebotstexte und ein Tagesplan aus deinen offenen Leads, jeden Morgen."],["Automationen","Begrüßen, nachfassen, an Vertragsende erinnern. Läuft im Hintergrund."],["Partnerprogramm","Baue dein Team auf. Overrides über drei Ebenen, nur aus echten Umsätzen."],["White Label","Deine Marke, deine Domain, deine Struktur. Für Agenturen und Vertriebe."]].map(([h,t])=>`<div class="panel"><h3>${h}</h3><p class="muted small">${t}</p></div>`).join("")}</section>
+  <p class="notice">Der Vergleich umfasst nicht den gesamten Markt. Bei Abschluss von Partner-Tarifen erhalten wir eine Provision.</p>
+  </div>`;
+
+/* ---------- modals ---------- */
+function modal(html){ $("#modalRoot").innerHTML = `<div class="overlay" data-close><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`; $("#modalRoot .modal input, #modalRoot .modal button")?.focus(); }
+function closeModal(){ $("#modalRoot").innerHTML=""; }
+function leadModal(l){
+  const isNew=!l; l = l || {id:uid(),name:"",kontakt:"",tel:"",seg:"privat",typ:"strom",kwh:3500,quelle:"manuell",stage:"neu",wv:addDays(1),ablauf:"",verlauf:[]};
+  modal(`<form id="leadForm" data-id="${l.id}" class="grid" style="gap:12px">
+   <div class="row"><h2>${isNew?"Neuer Lead":esc(l.name)}</h2><span class="spacer"></span><button type="button" class="btn small ghost" data-close-btn>Schließen</button></div>
+   <div class="grid g2"><div class="field"><label for="lfName">Firma / Name</label><input class="input" id="lfName" value="${esc(l.name)}" required></div>
+   <div class="field"><label for="lfKontakt">Ansprechpartner</label><input class="input" id="lfKontakt" value="${esc(l.kontakt)}"></div>
+   <div class="field"><label for="lfTel">Telefon</label><input class="input mono" id="lfTel" value="${esc(l.tel)}"></div>
+   <div class="field"><label for="lfKwh">Verbrauch kWh/Jahr</label><input class="input mono" id="lfKwh" inputmode="numeric" value="${l.kwh}"></div>
+   <div class="field"><label for="lfSeg">Kundenart</label><select class="input" id="lfSeg"><option value="privat" ${l.seg==="privat"?"selected":""}>Privat</option><option value="gewerbe" ${l.seg==="gewerbe"?"selected":""}>Gewerbe</option></select></div>
+   <div class="field"><label for="lfTyp">Sparte</label><select class="input" id="lfTyp"><option value="strom" ${l.typ==="strom"?"selected":""}>Strom</option><option value="gas" ${l.typ==="gas"?"selected":""}>Gas</option></select></div>
+   <div class="field"><label for="lfStage">Status</label><select class="input" id="lfStage">${STAGES.map(([k,lab])=>`<option value="${k}" ${l.stage===k?"selected":""}>${lab}</option>`).join("")}</select></div>
+   <div class="field"><label for="lfQuelle">Quelle</label><select class="input" id="lfQuelle">${["Meta-Ads","Google-Maps-Suche","Tippgeber","Angebotslink","manuell"].map(q=>`<option ${l.quelle===q?"selected":""}>${q}</option>`).join("")}</select></div>
+   <div class="field"><label for="lfWv">Wiedervorlage</label><input class="input" type="date" id="lfWv" value="${l.wv||""}"></div>
+   <div class="field"><label for="lfAblauf">Vertragsende</label><input class="input" type="date" id="lfAblauf" value="${l.ablauf||""}"></div></div>
+   ${isNew?"":`<div class="row"><span class="small muted">Telefon:</span><span class="mono">${esc(l.tel)}</span><button type="button" class="btn small" data-copy-text="${esc(l.tel)}">Nummer kopieren</button><button type="button" class="btn small" data-wa="${l.id}">WhatsApp (Demo)</button><button type="button" class="btn small" data-compare-lead="${l.id}">Tarif vergleichen</button></div>
+   <div><h3 style="margin-bottom:6px">Verlauf</h3><ul class="list">${l.verlauf.slice().reverse().map(v=>`<li><span class="mono small muted" style="width:84px;flex:none">${fmtDate(v.d)}</span><span class="small">${esc(v.t)}</span></li>`).join("")||'<li class="small muted">Noch keine Einträge.</li>'}</ul></div>`}
+   <div class="field"><label for="lfNote">Notiz hinzufügen</label><input class="input" id="lfNote" placeholder="z. B. Jahresabrechnung erhalten"></div>
+   <div class="row">${isNew?"":`<button type="button" class="btn ghost" data-del-lead="${l.id}" style="color:var(--bad)">Lead löschen</button>`}<span class="spacer"></span><button class="btn primary" type="submit">Speichern</button></div></form>`);
+}
+function offerModal(t){
+  const res = tariffProvider.search(cmp); const bp=bestPrice(res,S.settings.minMarge);
+  const v = (bp.bestPartner && bp.bestPartner.id===t.id) ? bp.voucher : 0;
+  const tok = `angebot-${t.id}-${cmp.kwh}-${cmp.plz}-${v}`;
+  modal(`<div class="row"><h2>Angebot per Link</h2><span class="spacer"></span><button class="btn small ghost" data-close-btn>Schließen</button></div>
+   <div class="row"><input class="input mono" id="offerLink" readonly value="${ARTIFACT_URL}#${tok}" style="flex:1"><button class="btn primary" data-copy="#offerLink">Link kopieren</button><button class="btn" data-open-offer="${tok}">Kundenansicht öffnen</button></div>
+   <p class="notice">Damit Kunden den Link öffnen können, gib das Artefakt oben rechts über „Teilen“ öffentlich frei. Bis dahin funktioniert er nur für dich.</p>
+   <p class="small muted">So sieht dein Kunde das Angebot:</p>
+   <div class="panel" style="background:var(--surface-2);display:flex;flex-direction:column;gap:10px">
+     <div class="eyebrow">Ihr persönliches Angebot</div><h3>${esc(t.anbieter)} · ${esc(t.name)}</h3>
+     <div class="grid g2 small"><div>Grundpreis<br><b class="num">${eur(t.gp)}/Monat</b></div><div>Arbeitspreis<br><b class="num">${num(t.apEff,2)} ct/kWh</b></div><div>Laufzeit<br><b>${esc(t.laufzeit)}</b></div><div>Preisgarantie<br><b>${esc(t.garantie)}</b></div></div>
+     <div class="row"><span>Jahreskosten bei ${num(cmp.kwh)} kWh</span><span class="spacer"></span><b class="num">${eur(t.cost,0)}</b></div>
+     ${v?`<div class="row"><span>Gutschein <code class="mono">NEXX-${v}</code></span><span class="spacer"></span><b class="num" style="color:var(--good)">−${eur(v,0)}</b></div>`:""}
+     <div class="grid g2"><input class="input" placeholder="Vor- und Nachname" aria-label="Name"><input class="input" placeholder="Zählernummer" aria-label="Zählernummer"></div>
+     <button class="btn primary" type="button" data-close-btn>Jetzt verbindlich wechseln</button>
+     <p class="small muted">Vorschau. Der echte Abschluss läuft später über die Lieferanten-API.</p></div>`);
+}
+
+/* ---------- Kundenansicht Angebotslink ---------- */
+const ARTIFACT_URL=location.origin+location.pathname;
+const BOLT='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
+function parseOffer(tok){
+  const p=tok.split("-"); const base=TARIFFS.find(x=>x.id===p[1]); if(!base) return null;
+  const kwh=Math.max(100,parseInt(p[2])||3500), plz=(p[3]||"97688").replace(/\D/g,"").slice(0,5)||"97688", v=Math.max(0,parseInt(p[4])||0);
+  const t=tariffProvider.search({seg:base.seg,typ:base.typ,plz,kwh}).find(x=>x.id===base.id);
+  return {t,kwh,plz,v:Math.min(v,Math.max(0,base.prov))};
+}
+function customerView(tok){
+  const o=parseOffer(tok);
+  if(!o) return `<div class="panel empty">Dieses Angebot ist nicht mehr gültig. Bitte fordern Sie bei Ihrem Berater ein neues an.</div>`;
+  const {t,kwh,plz,v}=o; const eff=t.cost-v; const steuer=t.seg==="privat"?"inkl. MwSt.":"netto zzgl. MwSt.";
+  return `<div style="max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px;width:100%">
+   <div class="row"><span class="brand-mark" style="width:30px;height:30px">${S.wl.logo?`<img src="${S.wl.logo}" alt="">`:BOLT}</span><b style="font-family:var(--f-display)">${esc(S.wl.name||"PowerNexx")}</b></div>
+   <div><div class="eyebrow">Ihr persönliches Angebot</div><h1 style="margin-top:4px">${esc(t.anbieter)} · ${esc(t.name)}</h1><p class="muted" style="margin-top:6px">${t.typ==="strom"?"Strom":"Gas"} für ${num(kwh)} kWh im Jahr · PLZ ${esc(plz)}${t.oeko?" · Ökotarif":""}</p></div>
+   <section class="panel">
+     <div class="grid g2 small" style="margin-bottom:12px"><div><span class="muted">Grundpreis</span><br><b class="num">${eur(t.gp)} / Monat</b></div><div><span class="muted">Arbeitspreis</span><br><b class="num">${num(t.apEff,2)} ct/kWh</b></div><div><span class="muted">Laufzeit</span><br><b>${esc(t.laufzeit)}</b></div><div><span class="muted">Preisgarantie</span><br><b>${esc(t.garantie)}</b></div></div>
+     <div class="offer-line"><span>Jahreskosten</span><span class="num">${eur(t.cost)}</span></div>
+     ${v?`<div class="offer-line"><span>Wechselbonus, Gutschein <code class="mono">NEXX-${v}</code></span><span class="num" style="color:var(--good)">−${eur(v)}</span></div>`:""}
+     <div class="offer-line total"><span>Ihre Kosten im ersten Jahr</span><span class="num">${eur(eff)}</span></div>
+     <p class="small muted" style="margin-top:6px">Entspricht etwa ${eur(eff/12)} pro Monat, ${steuer}.</p>
+   </section>
+   <form class="panel grid" id="custForm" data-tok="${esc(tok)}" style="gap:12px">
+     <h2>Jetzt wechseln</h2>
+     <div class="field"><label for="cfName">Vor- und Nachname${t.seg==="gewerbe"?" bzw. Firma":""}</label><input class="input" id="cfName" required></div>
+     <div class="field"><label for="cfMail">E-Mail</label><input class="input" type="email" id="cfMail" required></div>
+     <div class="field"><label for="cfAddr">Lieferadresse</label><input class="input" id="cfAddr" placeholder="Straße, Hausnummer, PLZ, Ort" required></div>
+     <div class="field"><label for="cfZaehler">Zählernummer</label><input class="input mono" id="cfZaehler" required></div>
+     <label class="row small" style="align-items:flex-start;gap:8px"><input type="checkbox" id="cfAgb" required style="margin-top:3px"><span>Ich beauftrage den Wechsel und die Kündigung meines bisherigen Vertrags und akzeptiere AGB und Widerrufsbelehrung des Lieferanten.</span></label>
+     <button class="btn primary" type="submit">Verbindlich wechseln</button>
+     <p class="small muted">Demo: Es wird noch nichts an den Lieferanten übertragen.</p>
+   </form>
+   <p class="notice">Der Vergleich umfasst nicht den gesamten Markt. Bei Abschluss erhalten wir eine Provision. Der Wechselbonus wird offen ausgewiesen.</p>
+   <a class="small" href="#vergleich">← Zurück ins Vertriebsbüro</a>
+  </div>`;
+}
+
+/* ---------- Nexxi chat ---------- */
+let sampleFn = null, chatCtl = null;
+(async()=>{ try{ sampleFn = await window.claude?.use?.("sample"); }catch{ sampleFn=null; } })();
+function fallback(q){
+  if(/Tagesplan/i.test(q)) return "08:00 Gasthof Lindenhof anrufen: Angebot KissStrom Business nachfassen, Abschluss anstreben.\n09:00 Herr Bauer: kurzer Rückruf zum Gaswechsel, Zählerstand abfragen.\n10:00 Familie Krämer: Erstkontakt per WhatsApp, Termin vorschlagen.\n11:00 Bäckerei Saaletal: Jahresabrechnung einfordern, Vergleich vorbereiten.\n13:30 Lead-Finder: 10 Hotels in Bad Kissingen ins CRM übernehmen.\n15:00 Pension Kurpark: Erstanruf, Vertragsende erfragen.\n16:30 Team-Check mit Lena Vogt und Daniel Brandt.";
+  return "Nexxi ist in dieser Ansicht nicht mit Claude verbunden. Im veröffentlichten Artefakt auf claude.ai antwortet Nexxi live, nach deiner Freigabe.";
+}
+async function ask(q){
+  const msgs=$("#msgs"); if(!msgs) return;
+  S.chat.push({role:"user",content:q}); save();
+  msgs.insertAdjacentHTML("beforeend",`<div class="msg me">${esc(q)}</div><div class="msg ai" id="pending">Nexxi denkt nach…</div>`);
+  msgs.scrollTop=msgs.scrollHeight;
+  const out=$("#pending"); const send=$("#chatSend"), stop=$("#chatStop"), note=$("#chatNote");
+  send.disabled=true; stop.hidden=false; note.textContent="";
+  let answer="";
+  if(!sampleFn){ answer=fallback(q); out.textContent=answer; }
+  else{
+    chatCtl=new AbortController();
+    const turns=[{role:"user",content:RULES},...S.chat.slice(-10)];
+    if(turns[1]?.role==="assistant") turns.splice(1,1);
+    try{ const r=await sampleFn(turns,{cache:false,signal:chatCtl.signal,onText:({text})=>{out.textContent=text;msgs.scrollTop=msgs.scrollHeight;}}); answer=r.text; if(r.truncated) note.textContent="Antwort wurde gekürzt. Frag gezielter nach."; }
+    catch(e){ answer=e?.text||""; out.textContent=answer||"–";
+      const map={not_granted:"Nexxi wurde nicht freigegeben. Ohne Freigabe kann ich nicht antworten.",rate_limited:"Gerade zu viele Anfragen. Bitte gleich nochmal versuchen.",session_expired:"Bitte bei Claude neu anmelden.",refused:"Diese Anfrage kann Nexxi nicht beantworten. Formuliere sie anders.",cancelled:"Gestoppt."};
+      note.textContent = map[e?.code] || "Verbindung unterbrochen. Bitte nochmal senden.";
+      if(e?.code==="refused"){ out.textContent="–"; answer=""; }
+    }
+  }
+  out.removeAttribute("id");
+  if(answer){ S.chat.push({role:"assistant",content:answer}); save(); }
+  send.disabled=false; stop.hidden=true; msgs.scrollTop=msgs.scrollHeight;
+}
+
+/* ---------- theme / white label ---------- */
+function applyWL(){
+  const r=document.documentElement;
+  if(S.wl.accent){ r.style.setProperty("--accent",S.wl.accent); r.style.setProperty("--accent-soft",`color-mix(in srgb, ${S.wl.accent} 16%, var(--surface))`); }
+  else { r.style.removeProperty("--accent"); r.style.removeProperty("--accent-soft"); }
+  $("#brandName").textContent=S.wl.name||"PowerNexx";
+  $("#brandMark").innerHTML = S.wl.logo ? `<img src="${S.wl.logo}" alt="">` : '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
+}
+
+/* ---------- router ---------- */
+let current=(location.hash||"#dashboard").slice(1)||"dashboard";
+function go(id){ current=id; try{ if(location.hash.slice(1)!==id) history.replaceState(null,"","#"+id); }catch{} route(); }
+function route(){
+  let id=current;
+  if(id.startsWith("angebot-")){ document.body.classList.add("customer"); $("#view").innerHTML=customerView(id); window.scrollTo(0,0); return; }
+  document.body.classList.remove("customer");
+  if(!V[id]) id="dashboard";
+  renderNav(id); $("#view").innerHTML=V[id](); window.scrollTo(0,0);
+  if(id==="nexxi"){ const m=$("#msgs"); m.scrollTop=m.scrollHeight; if(pendingAsk){ const q=pendingAsk; pendingAsk=null; ask(q);} }
+}
+let pendingAsk=null;
+window.addEventListener("hashchange",()=>{ current=location.hash.slice(1)||"dashboard"; route(); });
+
+/* ---------- events ---------- */
+document.addEventListener("click", e=>{
+  const t=e.target.closest("button,a,[data-close]"); if(!t) return;
+  if(t.matches("[data-close]") && e.target===t) return closeModal();
+  if(t.matches("[data-close-btn]")) return closeModal();
+  const d=t.dataset;
+  if(d.plan){ e.preventDefault(); pendingAsk=planPrompt(); return go("nexxi"); }
+  if(t.tagName==="A" && (t.getAttribute("href")||"").startsWith("#")){ e.preventDefault(); return go(t.getAttribute("href").slice(1)||"dashboard"); }
+  if(d.openOffer){ closeModal(); return go(d.openOffer); }
+  if(d.seg){ cmp.seg=d.seg; cmp.kwh = d.seg==="privat"?(cmp.typ==="strom"?3500:15000):(cmp.typ==="strom"?42000:60000); return route(); }
+  if(d.typ){ cmp.typ=d.typ; cmp.kwh = cmp.seg==="privat"?(d.typ==="strom"?3500:15000):(d.typ==="strom"?42000:60000); return route(); }
+  if(d.offer){ const t2=tariffProvider.search(cmp).find(x=>x.id===d.offer); return offerModal(t2); }
+  if(d.copy){ return copy($(d.copy).value); }
+  if(d.copyText!==undefined){ return copy(d.copyText); }
+  if(d.openLead){ e.preventDefault(); return leadModal(S.leads.find(l=>l.id===d.openLead)); }
+  if(t.hasAttribute("data-new-lead")) return leadModal(null);
+  if(d.delLead){ S.leads=S.leads.filter(l=>l.id!==d.delLead); save(); closeModal(); toast("Lead gelöscht"); return route(); }
+  if(d.wa){ const l=S.leads.find(x=>x.id===d.wa); whatsappProvider.send(l,"Begrüßung"); l.verlauf.push({d:addDays(0),t:"WhatsApp-Nachricht gesendet (Demo)"}); save(); closeModal(); toast("WhatsApp in Demo protokolliert"); return route(); }
+  if(d.compareLead){ const l=S.leads.find(x=>x.id===d.compareLead); cmp={seg:l.seg,typ:l.typ,plz:"97688",kwh:l.kwh}; closeModal(); return go("vergleich"); }
+  if(d.take){ const r=finderResults.find(x=>x.id===d.take); S.leads.push({id:uid(),name:r.name,kontakt:"",tel:r.tel,seg:"gewerbe",typ:"strom",kwh:r.kwh,quelle:"Google-Maps-Suche",stage:"neu",wv:addDays(1),ablauf:"",verlauf:[{d:addDays(0),t:`Über Lead-Finder gefunden (${r.branche}, ${r.ort})`}]}); save(); toast("Ins CRM übernommen"); return route(); }
+  if(d.quick!==undefined){ const [,q]=QUICK[+d.quick]; return ask(q||planPrompt()); }
+  if(t.hasAttribute("data-clear-chat")){ S.chat=[]; save(); return route(); }
+  if(t.id==="chatStop"){ chatCtl?.abort(); return; }
+  if(t.hasAttribute("data-wl-reset")){ S.wl={name:"PowerNexx",accent:"",domain:"",logo:""}; save(); applyWL(); toast("Zurückgesetzt"); return route(); }
+  if(d.buy){ toast(`${d.buy}: Bezahlung wird mit Stripe angebunden`); return; }
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeModal(); });
+document.addEventListener("change",e=>{
+  if(e.target.dataset.auto){ const a=S.automations.find(x=>x.id===e.target.dataset.auto); a.on=e.target.checked; save(); toast(a.on?"Ablauf aktiviert":"Ablauf pausiert"); }
+});
+document.addEventListener("submit",e=>{
+  e.preventDefault(); const f=e.target;
+  if(f.id==="custForm"){ const o=parseOffer(f.dataset.tok); if(!o) return; const name=$("#cfName").value.trim();
+    S.leads.push({id:uid(),name:name||"Online-Kunde",kontakt:name,tel:"",seg:o.t.seg,typ:o.t.typ,kwh:o.kwh,quelle:"Angebotslink",stage:"abschluss",wv:"",ablauf:"",verlauf:[{d:addDays(0),t:`Online-Abschluss über Angebotslink: ${o.t.anbieter} ${o.t.name}${o.v?`, Gutschein NEXX-${o.v}`:""}`}]}); save();
+    f.outerHTML=`<section class="panel"><h2>Vielen Dank${name?", "+esc(name.split(" ")[0]):""}!</h2><p class="muted" style="margin-top:6px">Ihr Wechselauftrag ist eingegangen. Sie erhalten in Kürze eine Bestätigung per E-Mail.</p></section>`; return; }
+  if(f.id==="cmpForm"){ cmp.plz=$("#plz").value.replace(/\D/g,"").slice(0,5)||"97688"; cmp.kwh=Math.max(100,parseInt($("#kwh").value.replace(/\D/g,""))||3500); S.settings.minMarge=Math.max(0,parseInt($("#marge").value)||0); save(); return route(); }
+  if(f.id==="finderForm"){ finderQ={branche:$("#branche").value,ort:$("#ort").value.trim()||"Bad Kissingen"}; finderResults=leadFinderProvider.search(finderQ.branche,finderQ.ort); return route(); }
+  if(f.id==="chatForm"){ const v=$("#chatIn").value.trim(); if(!v) return; $("#chatIn").value=""; return ask(v); }
+  if(f.id==="autoForm"){ const steps=[$("#aAct1").value,$("#aAct2").value].filter(Boolean); S.automations.unshift({id:uid(),on:true,name:$("#aName").value.trim(),trigger:$("#aTrig").value,steps,runs:0}); save(); toast("Ablauf gespeichert"); return route(); }
+  if(f.id==="leadForm"){
+    const id=f.dataset.id; let l=S.leads.find(x=>x.id===id); const isNew=!l;
+    if(isNew){ l={id,verlauf:[{d:addDays(0),t:"Lead angelegt"}]}; S.leads.push(l); }
+    const prevStage=l.stage;
+    Object.assign(l,{name:$("#lfName").value.trim(),kontakt:$("#lfKontakt").value.trim(),tel:$("#lfTel").value.trim(),kwh:parseInt($("#lfKwh").value.replace(/\D/g,""))||0,seg:$("#lfSeg").value,typ:$("#lfTyp").value,stage:$("#lfStage").value,quelle:$("#lfQuelle").value,wv:$("#lfWv").value,ablauf:$("#lfAblauf").value});
+    if(!isNew && prevStage!==l.stage) l.verlauf.push({d:addDays(0),t:`Status → ${STAGES.find(s=>s[0]===l.stage)[1]}`});
+    const n=$("#lfNote").value.trim(); if(n) l.verlauf.push({d:addDays(0),t:n});
+    save(); closeModal(); toast(isNew?"Lead angelegt":"Gespeichert"); return route();
+  }
+  if(f.id==="wlForm"){
+    const file=$("#wlLogo").files[0];
+    const finish=()=>{ S.wl.name=$("#wlName").value.trim()||"PowerNexx"; S.wl.accent=$("#wlAccent").value; S.wl.domain=$("#wlDomain").value.trim(); save(); applyWL(); toast("White Label übernommen"); route(); };
+    if(file){ if(file.size>400000){ toast("Logo bitte unter 400 KB"); return; } const rd=new FileReader(); rd.onload=()=>{ S.wl.logo=rd.result; finish(); }; rd.readAsDataURL(file); } else finish();
+  }
+});
+/* drag & drop kanban */
+document.addEventListener("dragstart",e=>{ const c=e.target.closest?.("[data-card]"); if(c){ e.dataTransfer.setData("text/plain",c.dataset.card); }});
+document.addEventListener("dragover",e=>{ const col=e.target.closest?.("[data-col]"); if(col){ e.preventDefault(); col.classList.add("drop"); }});
+document.addEventListener("dragleave",e=>{ const col=e.target.closest?.("[data-col]"); if(col) col.classList.remove("drop"); });
+document.addEventListener("drop",e=>{ const col=e.target.closest?.("[data-col]"); if(!col) return; e.preventDefault(); const id=e.dataTransfer.getData("text/plain"); const l=S.leads.find(x=>x.id===id); if(l && l.stage!==col.dataset.col){ l.stage=col.dataset.col; l.verlauf.push({d:addDays(0),t:`Status → ${STAGES.find(s=>s[0]===l.stage)[1]}`}); save(); toast("Status aktualisiert"); } route(); });
+
+applyWL(); route();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>PowerNexx für Vertriebler</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="PowerNexx ist das KI-Vertriebsbüro für Handelsvertreter im Energievertrieb: ehrlicher Tarifvergleich mit Bestpreis-Gutschein, Leads, CRM, Automationen und Partnerprogramm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a switchboard-dark hero holding a working meter (the product's honesty rule, live),
+   then light editorial bands that walk from problem → mechanism → modules → network → price */
+:root{
+  --bg:#f4f7f6; --paper:#ffffff; --tint:#e8efec; --fg:#12201c; --muted:#56685f; --line:#d3dfda;
+  --accent:#0f8a6c; --accent-ink:#ffffff; --accent-soft:#dcf2ea;
+  --volt:#e9b10f; --volt-ink:#5a4300; --volt-soft:#fbf1cf;
+  --night:#0b1613; --night-2:#13231f; --night-line:#22372f; --night-fg:#dbe9e4; --night-muted:#86a198; --lcd:#9ff0cf;
+  --good:#1f8a4c; --bad:#c2413a;
+  --f-display:"Sora","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1714; --paper:#15211d; --tint:#1a2925; --fg:#e4efeb; --muted:#97aba4; --line:#283a34;
+  --accent:#2fc196; --accent-ink:#05231a; --accent-soft:#143a30; --volt:#f2c440; --volt-ink:#f2c440; --volt-soft:#3a3115;
+  --night:#08110e; --night-2:#101d19; --night-line:#22372f; --good:#4cc283; --bad:#ef746c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1714; --paper:#15211d; --tint:#1a2925; --fg:#e4efeb; --muted:#97aba4; --line:#283a34;
+  --accent:#2fc196; --accent-ink:#05231a; --accent-soft:#143a30; --volt:#f2c440; --volt-ink:#f2c440; --volt-soft:#3a3115;
+  --night:#08110e; --night-2:#101d19; --night-line:#22372f; --good:#4cc283; --bad:#ef746c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.02em;line-height:1.1}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{max-width:1160px;margin:0 auto}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.lead{font-size:1.12rem;color:var(--muted);max-width:60ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:600;font-size:.95rem;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:var(--f-body);white-space:nowrap;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.line{border-color:currentColor;background:transparent}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--night) 92%,transparent);backdrop-filter:blur(8px);color:var(--night-fg);border-bottom:1px solid var(--night-line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--night)}
+.top .inner{display:flex;align-items:center;gap:24px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:1.15rem}
+.logo i{width:30px;height:30px;border-radius:8px;background:#2fc196;display:grid;place-items:center}
+.top nav{display:flex;gap:22px;font-size:.92rem;margin-left:auto}
+.top nav a{text-decoration:none;color:var(--night-muted)}
+.top nav a:hover{color:var(--night-fg)}
+.top .btn{padding:9px 16px;font-size:.88rem}
+
+/* hero */
+.hero{background:var(--night);color:var(--night-fg);padding-block:72px 88px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--night-line) 1px,transparent 1px),linear-gradient(90deg,var(--night-line) 1px,transparent 1px);background-size:48px 48px;opacity:.35;mask-image:radial-gradient(ellipse at 75% 40%,#000 0%,transparent 65%);pointer-events:none}
+.hero .inner{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:56px;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:clamp(2.3rem,5.2vw,4rem);font-weight:800;line-height:1.02;margin-top:16px}
+.hero h1 em{font-style:normal;color:#2fc196}
+.hero .lead{color:var(--night-muted);margin-top:22px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.hero .btn.primary{background:#2fc196;color:#05231a}
+.hero .fine{margin-top:16px;font-size:.85rem;color:var(--night-muted)}
+.hero .eyebrow{color:#2fc196}
+
+/* meter */
+.meter{background:var(--night-2);border:1px solid var(--night-line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.meter-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--night-muted)}
+.meter-head b{color:var(--volt);font-weight:500}
+.slider{display:flex;flex-direction:column;gap:8px}
+.slider label{display:flex;justify-content:space-between;font-size:.85rem;color:var(--night-muted)}
+.slider label output{font-family:var(--f-mono);color:var(--night-fg)}
+input[type=range]{width:100%;accent-color:#2fc196}
+.trow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px 14px;border-radius:10px;border:1px solid var(--night-line);align-items:center}
+.trow .who{font-weight:600;font-size:.95rem}
+.trow .tag{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--night-muted)}
+.trow .cost{font-family:var(--f-mono);font-size:1.15rem;text-align:right;grid-row:1/3;grid-column:2}
+.trow.partner{border-color:#2fc196;background:color-mix(in srgb,#2fc196 10%,transparent)}
+.trow.cheap .tag{color:var(--volt)}
+.trow.partner .tag{color:#2fc196}
+.lcd{background:#06100d;border:1px solid var(--night-line);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.lcd span{font-size:.8rem;color:var(--night-muted)}
+.lcd b{font-family:var(--f-mono);font-weight:500;font-size:1.7rem;color:var(--lcd);letter-spacing:.04em}
+.verdict{font-size:.85rem;line-height:1.5;color:var(--night-fg);min-height:3em}
+.verdict code{font-family:var(--f-mono);background:color-mix(in srgb,#2fc196 18%,transparent);color:#2fc196;padding:1px 6px;border-radius:5px}
+.verdict.no{color:var(--volt)}
+.meter-foot{font-size:.72rem;color:var(--night-muted)}
+
+/* sections */
+section.band{padding-block:96px}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:48px}
+.sec-head h2{font-size:clamp(1.8rem,3.4vw,2.6rem);margin-top:12px}
+.problem{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.problem div{border-top:2px solid var(--fg);padding-top:18px;display:flex;flex-direction:column;gap:8px}
+.problem b{font-family:var(--f-mono);font-size:2.4rem;font-weight:500;line-height:1}
+.problem h3{font-size:1.05rem}
+.problem p{color:var(--muted);font-size:.95rem}
+
+.how{background:var(--paper);border-block:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s;position:relative}
+.step{padding:24px 22px 24px 0;display:flex;flex-direction:column;gap:10px;position:relative}
+.step::before{counter-increment:s;content:counter(s);font-family:var(--f-mono);width:34px;height:34px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-size:.85rem;background:var(--paper);position:relative;z-index:1}
+.step::after{content:"";position:absolute;top:41px;left:34px;right:0;height:1.5px;background:var(--line)}
+.step:last-child::after{display:none}
+.step h3{font-size:1.05rem;margin-top:6px}
+.step p{color:var(--muted);font-size:.93rem}
+.rule{margin-top:40px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start;background:var(--volt-soft);border-radius:14px;padding:22px 24px}
+.rule .mark{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--volt-ink);border:1.5px solid currentColor;border-radius:6px;padding:4px 8px;white-space:nowrap}
+.rule p{font-size:.98rem}
+
+.modules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.mod{background:var(--paper);padding:28px 26px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mod svg{width:26px;height:26px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.mod h3{font-size:1.08rem}
+.mod p{color:var(--muted);font-size:.93rem}
+
+.network{background:var(--night);color:var(--night-fg)}
+.network .eyebrow{color:#2fc196}
+.network .lead{color:var(--night-muted)}
+.net-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
+.levels{display:flex;flex-direction:column;gap:10px}
+.level{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 18px;border:1px solid var(--night-line);border-radius:12px;background:var(--night-2)}
+.level .lv{font-family:var(--f-mono);font-size:.75rem;color:var(--night-muted);letter-spacing:.06em;text-transform:uppercase}
+.level .pct{font-family:var(--f-mono);font-size:1.5rem;color:#2fc196}
+.level .bar{height:6px;border-radius:3px;background:#2fc196}
+.level .bar-track{background:var(--night-line);border-radius:3px}
+.net-note{margin-top:16px;font-size:.88rem;color:var(--night-muted)}
+.wl{margin-top:56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:40px;align-items:center;border-top:1px solid var(--night-line);padding-top:56px}
+.wl-demo{display:flex;gap:10px;flex-wrap:wrap}
+.swatch{flex:1;min-width:140px;border-radius:12px;border:1px solid var(--night-line);overflow:hidden;background:var(--night-2)}
+.swatch .bar{height:10px}
+.swatch div{padding:12px;font-size:.85rem;display:flex;flex-direction:column;gap:2px}
+.swatch span{font-family:var(--f-mono);font-size:.72rem;color:var(--night-muted)}
+
+.plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.plan{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:26px 22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.plan.pick{border:2px solid var(--accent);position:relative}
+.plan.pick::before{content:"Empfohlen";position:absolute;top:-12px;left:20px;background:var(--accent);color:var(--accent-ink);font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:999px}
+.plan h3{font-size:1.1rem}
+.price{font-family:var(--f-mono);font-size:2rem;font-weight:500;line-height:1}
+.price small{font-size:.8rem;color:var(--muted);font-family:var(--f-body);display:block;margin-top:6px}
+.plan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:.92rem}
+.plan li{padding-left:22px;position:relative}
+.plan li::before{content:"";position:absolute;left:2px;top:.55em;width:10px;height:6px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
+.plan .btn{margin-top:auto}
+.plan .btn.line{color:var(--fg);border-color:var(--line)}
+.plan .btn.line:hover{border-color:var(--accent)}
+.price-note{margin-top:18px;font-size:.85rem;color:var(--muted)}
+
+.faq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:48px}
+details{border-top:1px solid var(--line);padding:18px 0}
+details:last-child{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:600;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--f-mono);color:var(--accent);font-size:1.2rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:var(--muted);max-width:62ch}
+
+.cta{background:var(--accent);color:var(--accent-ink)}
+.cta .inner{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:center}
+.cta h2{font-size:clamp(1.9rem,3.6vw,2.8rem)}
+.cta p{margin-top:14px;opacity:.85;max-width:52ch}
+.contact{display:flex;flex-direction:column;gap:12px}
+.contact-row{display:flex;justify-content:space-between;align-items:center;gap:12px;background:color-mix(in srgb,var(--accent-ink) 10%,transparent);border-radius:10px;padding:12px 14px}
+.contact-row span{font-size:.78rem;opacity:.8;display:block}
+.contact-row b{font-family:var(--f-mono);font-weight:500;user-select:all;word-break:break-all}
+.copy{background:var(--accent-ink);color:var(--accent);border:0;border-radius:8px;padding:7px 12px;font-weight:600;font-size:.82rem;cursor:pointer;font-family:var(--f-body)}
+.cta .btn{background:var(--accent-ink);color:var(--accent)}
+
+footer{background:var(--night);color:var(--night-muted);padding-block:40px;font-size:.85rem}
+footer .inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer b{color:var(--night-fg)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.88rem;z-index:40}
+
+@media (max-width: 960px){
+  .hero .inner,.sec-head,.net-grid,.wl,.faq,.cta .inner{grid-template-columns:minmax(0,1fr)}
+  .hero{padding-block:48px 64px}
+  .hero .inner{gap:40px}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .step::after{display:none}
+  .modules{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plans{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .top nav{display:none}
+  .top .btn{margin-left:auto}
+  section.band{padding-block:72px}
+}
+@media (max-width: 600px){
+  .problem,.steps,.modules,.plans{grid-template-columns:minmax(0,1fr)}
+  .level{grid-template-columns:72px minmax(0,1fr) auto}
+  .rule{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<header class="top band">
+  <div class="inner">
+    <a class="logo" href="#top"><i><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#05231a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></i>PowerNexx</a>
+    <nav aria-label="Seitennavigation">
+      <a href="#prinzip">Bestpreis-Prinzip</a>
+      <a href="#module">Funktionen</a>
+      <a href="#netzwerk">Partner</a>
+      <a href="#preise">Preise</a>
+      <a href="#fragen">Fragen</a>
+    </nav>
+    <a class="btn primary" href="https://buero.powernexx.de/"  target="_blank" rel="noopener">Demo öffnen</a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero band" aria-labelledby="h1">
+  <div class="inner">
+    <div>
+      <div class="eyebrow">Für Handelsvertreter Strom &amp; Gas</div>
+      <h1 id="h1">Zeig deinem Kunden den <em>billigsten</em> Tarif. Und gewinn ihn trotzdem.</h1>
+      <p class="lead">PowerNexx vergleicht jeden Tarif am Markt ehrlich. Ist ein fremder Tarif günstiger, gleicht ein Gutschein aus deiner Provision die Differenz aus. Dazu Leads, CRM, KI-Coach und dein eigenes Partnernetz in einem Büro.</p>
+      <div class="ctas">
+        <a class="btn primary" href="https://buero.powernexx.de/"  target="_blank" rel="noopener">Demo ausprobieren</a>
+        <a class="btn line" href="#preise">Preise ansehen</a>
+      </div>
+      <p class="fine">Web-App für Desktop und Handy · monatlich kündbar</p>
+    </div>
+
+    <div class="meter" aria-label="Rechenbeispiel Bestpreis-Gutschein">
+      <div class="meter-head"><span>Live-Rechnung · Privat Strom</span><b>Beispieltarife</b></div>
+      <div class="slider">
+        <label for="kwh">Jahresverbrauch <output id="kwhOut" class="num">3.500 kWh</output></label>
+        <input type="range" id="kwh" min="1500" max="10000" step="100" value="3500">
+      </div>
+      <div class="trow cheap"><span class="tag">Günstigster am Markt · kein Partner</span><span class="who">Anbieter A · Flex-Tarif</span><span class="cost" id="cA">1.050 €</span></div>
+      <div class="trow partner"><span class="tag">Dein Partner-Tarif · 90 € Provision</span><span class="who">Anbieter B · 12 Monate Garantie</span><span class="cost" id="cB">1.102 €</span></div>
+      <div class="lcd"><span>Gutschein für den Kunden</span><b id="lcd">53 €</b></div>
+      <p class="verdict" id="verdict"></p>
+      <p class="meter-foot">Mindestmarge 20 €. Tarifpreise werden nie verändert, der Gutschein wird offen ausgewiesen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="h-problem">
+  <div class="inner">
+    <div class="sec-head">
+      <div><div class="eyebrow">Das Problem</div><h2 id="h-problem">Vertrieb läuft heute über fünf Tools und einen Zettel.</h2></div>
+      <p class="lead">Vergleichsportal im einen Tab, Excel im nächsten, Leads im WhatsApp-Verlauf. Was dabei verloren geht, ist nicht Zeit. Es sind Abschlüsse.</p>
+    </div>
+    <div class="problem">
+      <div><b>01</b><h3>Kunden finden günstigere Tarife selbst</h3><p>Ein Klick bei einem großen Portal, und dein Angebot ist teurer. Ohne Antwort darauf ist das Gespräch vorbei.</p></div>
+      <div><b>02</b><h3>Leads versanden</h3><p>Ein Rückruf vergessen, ein Vertragsende verpasst. Niemand erinnert dich im richtigen Moment.</p></div>
+      <div><b>03</b><h3>Strukturen sind undurchsichtig</h3><p>Wer im Team was umsetzt und welche Provision wofür fließt, steht in keiner Übersicht.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band how" id="prinzip" aria-labelledby="h-how">
+  <div class="inner">
+    <div class="sec-head">
+      <div><div class="eyebrow">Das Bestpreis-Prinzip</div><h2 id="h-how">Ehrlich vergleichen ist dein stärkstes Verkaufsargument.</h2></div>
+      <p class="lead">Wie bei einer Hotel-Metasuche sieht dein Kunde alle Angebote. Du entscheidest, wie viel deiner Provision du einsetzt, um zu gewinnen.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Verbrauch eingeben</h3><p>PLZ, kWh, Privat oder Gewerbe, Strom oder Gas. Ein Formular für alles.</p></div>
+      <div class="step"><h3>Alle Tarife sehen</h3><p>Sortiert nach Jahreskosten. Der günstigste steht oben, auch wenn du daran nichts verdienst.</p></div>
+      <div class="step"><h3>Gutschein ausgleichen</h3><p>Dein bester Partner-Tarif bekommt einen Gutschein, der die Differenz deckt, bezahlt aus deiner Provision.</p></div>
+      <div class="step"><h3>Per Link abschließen</h3><p>Der Kunde bekommt sein Angebot als Link und wechselt online. Der Abschluss landet im CRM.</p></div>
+    </div>
+    <div class="rule"><span class="mark">Feste Regel</span><p>Reicht deine Provision abzüglich Mindestmarge nicht für den Ausgleich, gibt es keinen Gutschein und der günstigere Markttarif bleibt vorne. PowerNexx verändert keine Preise und weist jeden Gutschein offen aus.</p></div>
+  </div>
+</section>
+
+<section class="band" id="module" aria-labelledby="h-mod">
+  <div class="inner">
+    <div class="sec-head">
+      <div><div class="eyebrow">Ein Login, alles drin</div><h2 id="h-mod">Vom ersten Kontakt bis zur Provisionsabrechnung.</h2></div>
+      <p class="lead">Sechs Module, die zusammenarbeiten. Ein Lead aus dem Lead-Finder landet im CRM, löst eine Automation aus und taucht morgens in deinem Tagesplan auf.</p>
+    </div>
+    <div class="modules">
+      <div class="mod"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><h3>Tarifvergleich</h3><p>Privat und Gewerbe, Strom und Gas, mit Bestpreis-Gutschein und Angebot per Link.</p></div>
+      <div class="mod"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><h3>Lead-Finder</h3><p>Hotels, Bäckereien, Handwerk: Betriebe nach Branche und Ort finden und mit einem Klick übernehmen.</p></div>
+      <div class="mod"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg><h3>CRM mit Pipeline</h3><p>Neu, kontaktiert, Angebot, Abschluss. Wiedervorlagen und Vertragsende-Erinnerungen inklusive.</p></div>
+      <div class="mod"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg><h3>Nexxi, der KI-Coach</h3><p>Einwandbehandlung, Angebotstexte, WhatsApp-Nachrichten und ein Tagesplan aus deinen offenen Leads.</p></div>
+      <div class="mod"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg><h3>Automationen</h3><p>Neuer Lead bekommt eine Begrüßung, offenes Angebot wird nachgefasst, Vertragsende löst einen Vergleich aus.</p></div>
+      <div class="mod"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v4M12 12l-5 4.5M12 12l5 4.5"/></svg><h3>Partnerprogramm</h3><p>Team aufbauen, Ränge erreichen, Overrides live sehen. Inklusive Tippgeber-Zugang.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band network" id="netzwerk" aria-labelledby="h-net">
+  <div class="inner">
+    <div class="net-grid">
+      <div>
+        <div class="eyebrow">Partnerprogramm</div>
+        <h2 id="h-net" style="font-size:clamp(1.8rem,3.4vw,2.6rem);margin-top:12px">Bau dein Team auf. Verdien an dem, was es wirklich umsetzt.</h2>
+        <p class="lead" style="margin-top:18px">Partner werben Partner, über maximal drei Ebenen. Overrides gibt es nur auf bezahlte Lizenzen und belieferte Verträge, Stornos werden abgezogen. Für das reine Anwerben fließt kein Geld.</p>
+      </div>
+      <div>
+        <div class="levels">
+          <div class="level"><span class="lv">Ebene 1</span><div class="bar-track"><div class="bar" style="width:100%"></div></div><span class="pct">10 %</span></div>
+          <div class="level"><span class="lv">Ebene 2</span><div class="bar-track"><div class="bar" style="width:50%"></div></div><span class="pct">5 %</span></div>
+          <div class="level"><span class="lv">Ebene 3</span><div class="bar-track"><div class="bar" style="width:20%"></div></div><span class="pct">2 %</span></div>
+        </div>
+        <p class="net-note">Ränge: Tippgeber → Partner → Teamleiter (ab 5 aktiven Partnern) → Direktor (ab 3 Teamleitern).</p>
+      </div>
+    </div>
+    <div class="wl">
+      <div>
+        <div class="eyebrow">White Label</div>
+        <h3 style="font-size:1.6rem;margin-top:12px">Deine Marke. Deine Domain. Deine Struktur.</h3>
+        <p class="lead" style="margin-top:14px">Für Agenturen und Strukturvertriebe: PowerNexx läuft unter deinem Namen, deinem Logo und deiner Farbe. Deine Partner sehen nur dich.</p>
+      </div>
+      <div class="wl-demo" aria-hidden="true">
+        <div class="swatch"><div class="bar" style="background:#2fc196"></div><div><b>PowerNexx</b><span>buero.powernexx.de</span></div></div>
+        <div class="swatch"><div class="bar" style="background:#e9b10f"></div><div><b>Deine Agentur</b><span>app.deine-agentur.de</span></div></div>
+        <div class="swatch"><div class="bar" style="background:#6fa7e8"></div><div><b>Dein Vertrieb</b><span>portal.dein-vertrieb.de</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="preise" aria-labelledby="h-price">
+  <div class="inner">
+    <div class="sec-head">
+      <div><div class="eyebrow">Preise</div><h2 id="h-price">Ein Abschluss im Monat, und das Abo ist bezahlt.</h2></div>
+      <p class="lead">Ein Gewerbe-Stromvertrag bringt oft mehr Provision als ein Jahr Pro kostet. Alle Pakete monatlich kündbar.</p>
+    </div>
+    <div class="plans">
+      <div class="plan"><h3>Tippgeber</h3><div class="price">0 €<small>dauerhaft kostenlos</small></div><ul><li>Tipps abgeben</li><li>Provision bei Abschluss</li><li>Status jedes Tipps live</li></ul><a class="btn line" href="#kontakt">Kostenlos starten</a></div>
+      <div class="plan"><h3>Starter</h3><div class="price">49 €<small>pro Monat</small></div><ul><li>Tarifvergleich Privat + Gewerbe</li><li>Bestpreis-Gutscheine</li><li>CRM bis 500 Kontakte</li><li>Nexxi Basis</li></ul><a class="btn line" href="#kontakt">Starter wählen</a></div>
+      <div class="plan pick"><h3>Pro</h3><div class="price">149 €<small>pro Monat</small></div><ul><li>Alles aus Starter</li><li>Lead-Finder &amp; Lead-Maschine</li><li>Dialer &amp; WhatsApp</li><li>Automationen</li><li>Partnerprogramm 3 Ebenen</li></ul><a class="btn primary" href="#kontakt">Pro wählen</a></div>
+      <div class="plan"><h3>White Label</h3><div class="price">499 €<small>pro Monat + 990 € Einrichtung</small></div><ul><li>Eigene Marke, Farbe, Domain</li><li>10 Pro-Zugänge inklusive</li><li>Eigene Partnerstruktur</li><li>Umsatzbeteiligung</li></ul><a class="btn line" href="#kontakt">Gespräch anfragen</a></div>
+    </div>
+    <p class="price-note">Alle Preise netto zzgl. MwSt.</p>
+  </div>
+</section>
+
+<section class="band how" id="fragen" aria-labelledby="h-faq">
+  <div class="inner faq">
+    <div><div class="eyebrow">Fragen</div><h2 id="h-faq" style="font-size:clamp(1.8rem,3.4vw,2.6rem);margin-top:12px">Was Vertriebler uns zuerst fragen.</h2></div>
+    <div>
+      <details><summary>Ist es erlaubt, einen fremden Tarif anzuzeigen und dann einen Gutschein zu geben?</summary><p>Ja, solange alles transparent ist: echte Tarifpreise, offen ausgewiesener Gutschein und ein Hinweis, dass der Vergleich nicht den ganzen Markt abdeckt und provisionsfinanziert ist. Genau so ist PowerNexx gebaut. Für deinen Einzelfall gilt trotzdem: Rechtsberatung holst du bei einem Anwalt.</p></details>
+      <details><summary>Woher kommen die Tarife?</summary><p>Über Schnittstellen von Tarifdaten-Anbietern und Lieferanten-Portalen. In der Demo siehst du Beispieltarife, die Anbindung an Live-Daten folgt.</p></details>
+      <details><summary>Wer bezahlt den Gutschein?</summary><p>Du, aus deiner Provision. Du legst eine Mindestmarge fest. Ist der Ausgleich teurer, bietet PowerNexx keinen Gutschein an und du entscheidest selbst.</p></details>
+      <details><summary>Ist das Partnerprogramm ein Schneeballsystem?</summary><p>Nein. Es gibt höchstens drei Ebenen, und Geld fließt nur aus bezahlten Lizenzen und belieferten Verträgen. Wer nur anwirbt, verdient nichts.</p></details>
+      <details><summary>Funktioniert PowerNexx auf dem Handy?</summary><p>Ja. PowerNexx ist eine Web-App und läuft im Browser auf Desktop, Tablet und Smartphone.</p></details>
+      <details><summary>Kann ich kündigen?</summary><p>Monatlich. Deine Daten kannst du vorher exportieren.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="band cta" id="kontakt" aria-labelledby="h-cta">
+  <div class="inner" style="padding-block:88px">
+    <div>
+      <h2 id="h-cta">Bereit für ein Büro, das mitverkauft?</h2>
+      <p>Schreib uns oder ruf an. Wir richten deinen Zugang ein und zeigen dir PowerNexx in 20 Minuten an deinen eigenen Kunden.</p>
+      <div style="margin-top:26px"><a class="btn" href="https://buero.powernexx.de/"  target="_blank" rel="noopener">Demo jetzt öffnen</a></div>
+    </div>
+    <div class="contact">
+      <div class="contact-row"><div><span>E-Mail</span><b id="mail">info@powernexx.de</b></div><button class="copy" data-copy="mail">Kopieren</button></div>
+      <div class="contact-row"><div><span>Telefon</span><b id="tel">0971 12382982</b></div><button class="copy" data-copy="tel">Kopieren</button></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="band">
+  <div class="inner">
+    <span><b>PowerNexx Vertriebsbüro</b> · Wedler Vertrieb, Bad Kissingen</span>
+    <span>Impressum · Datenschutz · AGB</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const eur = n => new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(n);
+  const eur2 = n => new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(n);
+  const A = {gp:9.00, ap:26.9}, B = {gp:11.90, ap:27.4, prov:90}, MARGE = 20;
+  const $ = id => document.getElementById(id);
+  function calc(){
+    const k = +$("kwh").value;
+    const ca = A.gp*12 + A.ap*k/100, cb = B.gp*12 + B.ap*k/100;
+    const diff = cb - ca, v = Math.ceil(diff), max = B.prov - MARGE;
+    $("kwhOut").textContent = new Intl.NumberFormat("de-DE").format(k) + " kWh";
+    $("cA").textContent = eur(ca); $("cB").textContent = eur(cb);
+    const vd = $("verdict");
+    if (v <= max) {
+      $("lcd").textContent = eur(v);
+      vd.className = "verdict";
+      vd.innerHTML = `Gutschein <code>NEXX-${v}</code> gleicht ${eur2(diff)} aus. Dein Kunde zahlt im ersten Jahr ${eur(cb - v)}, du behältst ${eur(B.prov - v)} Provision.`;
+    } else {
+      $("lcd").textContent = "–";
+      vd.className = "verdict no";
+      vd.textContent = `Differenz ${eur2(diff)} ist größer als dein Spielraum von ${eur(max)}. Kein Gutschein, der günstigere Tarif bleibt vorne.`;
+    }
+  }
+  $("kwh").addEventListener("input", calc); calc();
+
+  document.addEventListener("click", async e => {
+    const b = e.target.closest("[data-copy]"); if (!b) return;
+    const text = $(b.dataset.copy).textContent;
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch {
+      const r = document.createRange(); r.selectNodeContents($(b.dataset.copy));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    }
+    const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role","status");
+    t.textContent = ok ? "Kopiert" : "Markiert, jetzt kopieren"; document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+  });
+})();
+</script>
+
+</body>
+</html>
