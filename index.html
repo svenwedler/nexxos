@@ -9,8 +9,7 @@
 <body>
 <title>PowerNexx Vertriebsbüro</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="fonts/app.css">
 <style>
 /* Layout: fixed dark control rail (like a switchboard) + light working surface; collapses to a top bar on phones */
 /* PowerNexx brand (from powernexx.de): navy hsl(220 60% 12%), lime hsl(85 80% 45%), Plus Jakarta Sans.
@@ -239,7 +238,9 @@ body.customer .app{grid-template-columns:minmax(0,1fr)}
       <span>Tarife, Leads und Provisionen sind Beispiele. Echte APIs werden später angebunden.</span>
     </div>
   </aside>
-  <main class="main"><div class="wrap" id="view"></div></main>
+  <main class="main"><div class="wrap" id="view"></div>
+    <footer class="small muted" style="max-width:1180px;margin:32px auto 0;display:flex;gap:16px;flex-wrap:wrap"><span>PowerNexx · Sven Wedler · Bad Kissingen</span><a href="/impressum" style="color:inherit">Impressum</a><a href="/datenschutz" style="color:inherit">Datenschutz</a></footer>
+  </main>
 </div>
 <div id="modalRoot"></div>
 
